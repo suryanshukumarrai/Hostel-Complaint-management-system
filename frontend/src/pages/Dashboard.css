@@ -10,6 +10,119 @@
   color: #1e3a8a;
 }
 
+/* Admin Stats Section */
+.admin-stats-section {
+  margin-bottom: 32px;
+}
+
+.stats-loading {
+  text-align: center;
+  padding: 20px;
+  color: #6b7280;
+}
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  border-left: 4px solid;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card.total {
+  border-left-color: #3b82f6;
+}
+
+.stat-card.open {
+  border-left-color: #f59e0b;
+}
+
+.stat-card.in-progress {
+  border-left-color: #06b6d4;
+}
+
+.stat-card.resolved {
+  border-left-color: #10b981;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #1e3a8a;
+}
+
+.stat-label {
+  color: #6b7280;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Category Breakdown */
+.category-breakdown {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.category-breakdown h3 {
+  font-size: 1.2rem;
+  color: #1e3a8a;
+  margin-bottom: 16px;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.category-item:hover {
+  background: #f3f4f6;
+}
+
+.category-name {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.category-count {
+  background: #3b82f6;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
 .complaint-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -21,4 +134,14 @@
   color: #6b7280;
   padding: 60px;
   font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .stats-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .complaint-grid {
+    grid-template-columns: 1fr;
+  }
 }

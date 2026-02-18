@@ -60,9 +60,27 @@ public class ComplaintService {
                 .collect(Collectors.toList());
     }
 
+    public List<ComplaintDTO> getComplaintsByUser(User user) {
+        return complaintRepository.findByRaisedBy(user).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     public ComplaintDTO getComplaintById(Long id) {
         Complaint complaint = complaintRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Complaint not found with id: " + id));
+        return convertToDTO(complaint);
+    }
+
+    public ComplaintDTO getComplaintByIdWithAuth(Long id, User user, String role) {
+        Complaint complaint = complaintRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Complaint not found with id: " + id));
+        
+        // If CLIENT role, verify they own this complaint
+        if ("CLIENT".equals(role) && !complaint.getRaisedBy().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized: You can only view your own complaints");
+        }
+        
         return convertToDTO(complaint);
     }
 
