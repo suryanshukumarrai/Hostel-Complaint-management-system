@@ -1,6 +1,7 @@
 package com.hostel.service;
 
 import com.hostel.dto.ComplaintDTO;
+import com.hostel.dto.CreateComplaintRequest;
 import com.hostel.dto.UserDTO;
 import com.hostel.entity.Category;
 import com.hostel.entity.Complaint;
@@ -8,76 +9,72 @@ import com.hostel.entity.Status;
 import com.hostel.entity.User;
 import com.hostel.exception.ResourceNotFoundException;
 import com.hostel.repository.ComplaintRepository;
+import com.hostel.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class ComplaintService {
-    
+
     @Autowired
     private ComplaintRepository complaintRepository;
-    
+
     @Autowired
-    private UserService userService;
-    
-    private static final String UPLOAD_DIR = "uploads/";
-    
-    public ComplaintDTO createComplaint(String title, String description, Category category, 
-                                       Long userId, MultipartFile file) throws IOException {
-        // Get user
-        User user = userService.getUserById(userId);
-        
-        // Create complaint
+    private UserRepository userRepository;
+
+    public ComplaintDTO createComplaint(CreateComplaintRequest request) {
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.getUserId()));
+
         Complaint complaint = new Complaint();
-        complaint.setTitle(title);
-        complaint.setDescription(description);
-        complaint.setCategory(category);
-        complaint.setStatus(Status.OPEN);
+        complaint.setMessageType(request.getMessageType());
+        complaint.setCategory(request.getCategory());
+        complaint.setSubCategory(request.getSubCategory());
+        complaint.setSpecificCategory(request.getSpecificCategory());
+        complaint.setBlock(request.getBlock());
+        complaint.setSubBlock(request.getSubBlock());
+        complaint.setRoomType(request.getRoomType());
+        complaint.setRoomNo(request.getRoomNo());
+        complaint.setContactNo(request.getContactNo());
+        complaint.setTimeSlot(request.getTimeSlot());
+        complaint.setDescription(request.getDescription());
         complaint.setRaisedBy(user);
-        
-        // Auto-assign based on category
-        complaint.setAssignedTo(getAssignedPerson(category));
-        
-        // Handle file upload
-        if (file != null && !file.isEmpty()) {
-            String fileName = saveFile(file);
-            complaint.setAttachmentUrl("/uploads/" + fileName);
+        complaint.setStatus(Status.OPEN);
+        complaint.setAssignedTo(resolveAssignee(request.getCategory()));
+
+        if (request.getAvailabilityDate() != null && !request.getAvailabilityDate().isBlank()) {
+            complaint.setAvailabilityDate(LocalDate.parse(request.getAvailabilityDate()));
         }
-        
-        Complaint savedComplaint = complaintRepository.save(complaint);
-        return convertToDTO(savedComplaint);
+
+        Complaint saved = complaintRepository.save(complaint);
+        return convertToDTO(saved);
     }
-    
+
     public List<ComplaintDTO> getAllComplaints() {
         return complaintRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-    
+
     public ComplaintDTO getComplaintById(Long id) {
         Complaint complaint = complaintRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Complaint not found with id: " + id));
         return convertToDTO(complaint);
     }
-    
-    public ComplaintDTO updateComplaintStatus(Long id, Status status) {
+
+    public ComplaintDTO updateStatus(Long id, Status status) {
         Complaint complaint = complaintRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Complaint not found with id: " + id));
         complaint.setStatus(status);
-        Complaint updatedComplaint = complaintRepository.save(complaint);
-        return convertToDTO(updatedComplaint);
+        return convertToDTO(complaintRepository.save(complaint));
     }
-    
-    private String getAssignedPerson(Category category) {
+
+    private String resolveAssignee(Category category) {
+        if (category == null) return "Unassigned";
         return switch (category) {
             case CARPENTRY -> "Ram";
             case RAGGING -> "Shyam";
@@ -85,47 +82,33 @@ public class ComplaintService {
             case PLUMBING -> "Plumber Team";
         };
     }
-    
-    private String saveFile(MultipartFile file) throws IOException {
-        // Create uploads directory if it doesn't exist
-        File uploadDir = new File(UPLOAD_DIR);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
-        
-        // Generate unique filename
-        String originalFilename = file.getOriginalFilename();
-        String extension = originalFilename != null && originalFilename.contains(".") 
-                ? originalFilename.substring(originalFilename.lastIndexOf(".")) 
-                : "";
-        String fileName = UUID.randomUUID().toString() + extension;
-        
-        // Save file
-        Path filePath = Path.of(UPLOAD_DIR + fileName);
-        Files.write(filePath, file.getBytes());
-        
-        return fileName;
-    }
-    
-    private ComplaintDTO convertToDTO(Complaint complaint) {
+
+    private ComplaintDTO convertToDTO(Complaint c) {
         ComplaintDTO dto = new ComplaintDTO();
-        dto.setId(complaint.getId());
-        dto.setTitle(complaint.getTitle());
-        dto.setDescription(complaint.getDescription());
-        dto.setCategory(complaint.getCategory());
-        dto.setStatus(complaint.getStatus());
-        dto.setCreatedAt(complaint.getCreatedAt());
-        dto.setAttachmentUrl(complaint.getAttachmentUrl());
-        dto.setAssignedTo(complaint.getAssignedTo());
-        
-        // Convert user to DTO
-        User user = complaint.getRaisedBy();
+        dto.setId(c.getId());
+        dto.setMessageType(c.getMessageType());
+        dto.setCategory(c.getCategory());
+        dto.setSubCategory(c.getSubCategory());
+        dto.setSpecificCategory(c.getSpecificCategory());
+        dto.setBlock(c.getBlock());
+        dto.setSubBlock(c.getSubBlock());
+        dto.setRoomType(c.getRoomType());
+        dto.setRoomNo(c.getRoomNo());
+        dto.setContactNo(c.getContactNo());
+        dto.setAvailabilityDate(c.getAvailabilityDate());
+        dto.setTimeSlot(c.getTimeSlot());
+        dto.setDescription(c.getDescription());
+        dto.setAssignedTo(c.getAssignedTo());
+        dto.setStatus(c.getStatus());
+        dto.setCreatedAt(c.getCreatedAt());
+
+        User u = c.getRaisedBy();
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setName(user.getName());
-        userDTO.setRole(user.getRole());
+        userDTO.setId(u.getId());
+        userDTO.setName(u.getFullName());
+        userDTO.setRole(u.getRole());
         dto.setRaisedBy(userDTO);
-        
+
         return dto;
     }
 }

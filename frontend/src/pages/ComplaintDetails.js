@@ -1,172 +1,87 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { complaintService } from '../services/complaintService';
+import { getComplaintById, updateComplaintStatus } from '../services/complaintService';
 import './ComplaintDetails.css';
 
-const ComplaintDetails = () => {
+const STATUSES = ['OPEN', 'IN_PROGRESS', 'RESOLVED'];
+
+function ComplaintDetails({ currentUser }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [complaint, setComplaint] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [error, setError] = useState('');
+  const [newStatus, setNewStatus] = useState('');
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
-    fetchComplaint();
-  }, [id]);
+    const fetch = async () => {
+      try {
+        const data = await getComplaintById(id, currentUser);
+        setComplaint(data);
+        setNewStatus(data.status);
+      } catch (err) {
+        setError('Failed to load complaint.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetch();
+  }, [id, currentUser]);
 
-  const fetchComplaint = async () => {
+  const handleStatusUpdate = async () => {
+    setUpdating(true);
     try {
-      setLoading(true);
-      const data = await complaintService.getComplaintById(id);
-      setComplaint(data);
-      setError(null);
-    } catch (err) {
-      setError('Failed to fetch complaint details. Please try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleStatusUpdate = async (e) => {
-    const newStatus = e.target.value;
-    if (!newStatus || newStatus === complaint.status) return;
-
-    try {
-      setUpdatingStatus(true);
-      const updated = await complaintService.updateComplaintStatus(id, newStatus);
+      const updated = await updateComplaintStatus(id, newStatus, currentUser);
       setComplaint(updated);
     } catch (err) {
-      alert('Failed to update status. Please try again.');
-      console.error(err);
+      setError('Failed to update status: ' + (err.response?.data || err.message));
     } finally {
-      setUpdatingStatus(false);
+      setUpdating(false);
     }
   };
 
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'OPEN':
-        return 'status-open';
-      case 'IN_PROGRESS':
-        return 'status-in-progress';
-      case 'RESOLVED':
-        return 'status-resolved';
-      default:
-        return '';
-    }
-  };
+  if (loading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error">{error}</div>;
+  if (!complaint) return null;
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString();
-  };
-
-  if (loading) {
-    return <div className="loading">Loading complaint details...</div>;
-  }
-
-  if (error) {
-    return (
-      <div className="error">
-        {error}
-        <button onClick={() => navigate('/')} className="btn-primary" style={{ marginTop: '20px' }}>
-          Back to Dashboard
-        </button>
-      </div>
-    );
-  }
-
-  if (!complaint) {
-    return <div className="error">Complaint not found</div>;
-  }
+  const isAdmin = currentUser?.role === 'ADMIN';
 
   return (
     <div className="complaint-details">
-      <div className="card">
-        <div className="details-header">
-          <h1>Complaint Details</h1>
-          <button onClick={() => navigate('/')} className="btn-secondary">
-            Back to Dashboard
+      <button className="btn-back" onClick={() => navigate('/dashboard')}>← Back</button>
+      <h2>Complaint #{complaint.id}</h2>
+      <div className="detail-grid">
+        <div className="detail-item"><span>Type:</span> {complaint.messageType}</div>
+        <div className="detail-item"><span>Category:</span> {complaint.category}</div>
+        <div className="detail-item"><span>Sub Category:</span> {complaint.subCategory || '—'}</div>
+        <div className="detail-item"><span>Block:</span> {complaint.block || '—'}</div>
+        <div className="detail-item"><span>Contact:</span> {complaint.contactNo || '—'}</div>
+        <div className="detail-item"><span>Status:</span>
+          <span className={`status-badge status-${complaint.status?.toLowerCase()}`}>{complaint.status}</span>
+        </div>
+        <div className="detail-item"><span>Raised By:</span> {complaint.raisedBy?.name || '—'}</div>
+        <div className="detail-item"><span>Assigned To:</span> {complaint.assignedTo || '—'}</div>
+        <div className="detail-item"><span>Created:</span> {new Date(complaint.createdAt).toLocaleString()}</div>
+      </div>
+      <div className="description-box">
+        <h4>Description</h4>
+        <p>{complaint.description}</p>
+      </div>
+
+      {isAdmin && (
+        <div className="status-update">
+          <h4>Update Status</h4>
+          <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
+            {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <button className="btn-primary" onClick={handleStatusUpdate} disabled={updating}>
+            {updating ? 'Updating...' : 'Update'}
           </button>
         </div>
-
-        <div className="details-content">
-          <div className="detail-row">
-            <span className="detail-label">ID:</span>
-            <span className="detail-value">{complaint.id}</span>
-          </div>
-
-          <div className="detail-row">
-            <span className="detail-label">Title:</span>
-            <span className="detail-value">{complaint.title}</span>
-          </div>
-
-          <div className="detail-row">
-            <span className="detail-label">Description:</span>
-            <span className="detail-value">{complaint.description}</span>
-          </div>
-
-          <div className="detail-row">
-            <span className="detail-label">Category:</span>
-            <span className="detail-value">{complaint.category}</span>
-          </div>
-
-          <div className="detail-row">
-            <span className="detail-label">Status:</span>
-            <span className={`status-badge ${getStatusClass(complaint.status)}`}>
-              {complaint.status.replace('_', ' ')}
-            </span>
-          </div>
-
-          <div className="detail-row">
-            <span className="detail-label">Assigned To:</span>
-            <span className="detail-value">{complaint.assignedTo}</span>
-          </div>
-
-          <div className="detail-row">
-            <span className="detail-label">Raised By:</span>
-            <span className="detail-value">
-              {complaint.raisedBy?.name} ({complaint.raisedBy?.role})
-            </span>
-          </div>
-
-          <div className="detail-row">
-            <span className="detail-label">Created At:</span>
-            <span className="detail-value">{formatDate(complaint.createdAt)}</span>
-          </div>
-
-          {complaint.attachmentUrl && (
-            <div className="detail-row">
-              <span className="detail-label">Attachment:</span>
-              <a
-                href={`http://localhost:8080${complaint.attachmentUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="attachment-link"
-              >
-                View Attachment
-              </a>
-            </div>
-          )}
-
-          <div className="detail-row">
-            <span className="detail-label">Update Status:</span>
-            <select
-              value={complaint.status}
-              onChange={handleStatusUpdate}
-              disabled={updatingStatus}
-              className="status-select"
-            >
-              <option value="OPEN">Open</option>
-              <option value="IN_PROGRESS">In Progress</option>
-              <option value="RESOLVED">Resolved</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
-};
+}
 
 export default ComplaintDetails;

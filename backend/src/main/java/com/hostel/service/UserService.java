@@ -12,33 +12,33 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    
+
     @Autowired
     private UserRepository userRepository;
-    
+
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-    
+
     public UserDTO createUser(String name, String role) {
         User user = new User();
-        user.setName(name);
+        user.setFullName(name);
         user.setRole(role);
-        User savedUser = userRepository.save(user);
-        return convertToDTO(savedUser);
+        User saved = userRepository.save(user);
+        return convertToDTO(saved);
     }
-    
+
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
-    
+
     private UserDTO convertToDTO(User user) {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
-        dto.setName(user.getName());
+        dto.setName(user.getFullName());
         dto.setRole(user.getRole());
         return dto;
     }

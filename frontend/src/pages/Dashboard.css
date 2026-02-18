@@ -1,29 +1,24 @@
-.dashboard {
-  padding: 20px 0;
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
-.dashboard h1 {
-  margin-bottom: 20px;
-  color: #2c3e50;
+.dashboard-header h2 {
+  font-size: 1.6rem;
+  color: #1e3a8a;
 }
 
-.table-container {
-  overflow-x: auto;
+.complaint-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 
-.loading {
+.no-complaints {
   text-align: center;
-  padding: 40px;
-  font-size: 18px;
-  color: #666;
-}
-
-.error {
-  text-align: center;
-  padding: 40px;
-  font-size: 18px;
-  color: #dc3545;
-  background-color: #f8d7da;
-  border-radius: 8px;
-  border: 1px solid #f5c6cb;
+  color: #6b7280;
+  padding: 60px;
+  font-size: 1.1rem;
 }

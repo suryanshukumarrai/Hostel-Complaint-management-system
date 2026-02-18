@@ -1,69 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ComplaintCard from '../components/ComplaintCard';
-import { complaintService } from '../services/complaintService';
+import { getAllComplaints } from '../services/complaintService';
 import './Dashboard.css';
 
-const Dashboard = () => {
+function Dashboard({ currentUser }) {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        const data = await getAllComplaints(currentUser);
+        setComplaints(data);
+      } catch (err) {
+        setError('Failed to load complaints. ' + (err.response?.data || err.message));
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchComplaints();
-  }, []);
+  }, [currentUser]);
 
-  const fetchComplaints = async () => {
-    try {
-      setLoading(true);
-      const data = await complaintService.getAllComplaints();
-      setComplaints(data);
-      setError(null);
-    } catch (err) {
-      setError('Failed to fetch complaints. Please try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return <div className="loading">Loading complaints...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
+  if (loading) return <div className="loading">Loading complaints...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="dashboard">
-      <div className="card">
-        <h1>All Complaints</h1>
-        {complaints.length === 0 ? (
-          <p>No complaints found. Create your first complaint!</p>
-        ) : (
-          <div className="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Assigned To</th>
-                  <th>Status</th>
-                  <th>Created At</th>
-                </tr>
-              </thead>
-              <tbody>
-                {complaints.map((complaint) => (
-                  <ComplaintCard key={complaint.id} complaint={complaint} />
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+      <div className="dashboard-header">
+        <h2>Complaints Dashboard</h2>
+        <button className="btn-primary" onClick={() => navigate('/complaint/new')}>
+          + New Complaint
+        </button>
       </div>
+      {complaints.length === 0 ? (
+        <p className="no-complaints">No complaints found. Create your first one!</p>
+      ) : (
+        <div className="complaint-grid">
+          {complaints.map((c) => (
+            <ComplaintCard
+              key={c.id}
+              complaint={c}
+              onClick={() => navigate(`/complaint/${c.id}`)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
-};
+}
 
 export default Dashboard;

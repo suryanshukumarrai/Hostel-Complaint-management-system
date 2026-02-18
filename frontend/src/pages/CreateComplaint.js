@@ -1,174 +1,214 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { complaintService } from '../services/complaintService';
-import { userService } from '../services/userService';
+import { createComplaint } from '../services/complaintService';
 import './CreateComplaint.css';
 
-const CreateComplaint = () => {
+const MESSAGE_TYPES = ['GRIEVANCE', 'ASSISTANCE', 'ENQUIRY', 'FEEDBACK', 'POSITIVE_FEEDBACK'];
+const CATEGORIES = ['CARPENTRY', 'ELECTRICAL', 'PLUMBING', 'RAGGING'];
+
+const SUB_CATEGORIES = {
+  CARPENTRY: ['Door Repair', 'Window Repair', 'Furniture Repair', 'Cabinet Repair', 'Other'],
+  ELECTRICAL: ['Light Not Working', 'Fan Issue', 'AC Issue', 'Switch Problem', 'Socket Problem', 'Wiring Issue', 'Other'],
+  PLUMBING: ['Leakage', 'Blockage', 'Tap Issue', 'Bathroom Issue', 'Other'],
+  RAGGING: ['Verbal Abuse', 'Physical Abuse', 'Mental Harassment', 'Other']
+};
+
+const TIME_SLOTS = [
+  '8:00 AM - 10:00 AM',
+  '10:00 AM - 12:00 PM',
+  '12:00 PM - 2:00 PM',
+  '2:00 PM - 4:00 PM',
+  '4:00 PM - 6:00 PM',
+  '6:00 PM - 8:00 PM'
+];
+
+function CreateComplaint({ currentUser }) {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-  const [formData, setFormData] = useState({
-    title: '',
+  const [form, setForm] = useState({
+    messageType: 'GRIEVANCE',
+    category: 'PLUMBING',
+    subCategory: '',
+    specificCategory: '',
+    block: '',
+    subBlock: '',
+    roomType: '',
+    roomNo: '',
+    contactNo: '',
+    availabilityDate: '',
+    timeSlot: '',
     description: '',
-    category: 'CARPENTRY',
-    userId: '',
   });
-  const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
-    try {
-      const data = await userService.getAllUsers();
-      setUsers(data);
-      if (data.length > 0) {
-        setFormData((prev) => ({ ...prev, userId: data[0].id }));
-      }
-    } catch (err) {
-      console.error('Failed to fetch users:', err);
-    }
-  };
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
+    setForm({
+      ...form,
       [name]: value,
-    }));
-  };
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+      // Reset sub-category when category changes
+      ...(name === 'category' && { subCategory: '', specificCategory: '' })
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!formData.title || !formData.description || !formData.userId) {
-      setError('Please fill in all required fields');
+    setError('');
+    if (!form.description.trim()) {
+      setError('Description is required.');
       return;
     }
-
+    setSubmitting(true);
     try {
-      setLoading(true);
-      setError(null);
-
-      const submitData = new FormData();
-      submitData.append('title', formData.title);
-      submitData.append('description', formData.description);
-      submitData.append('category', formData.category);
-      submitData.append('userId', formData.userId);
-      
-      if (file) {
-        submitData.append('file', file);
-      }
-
-      await complaintService.createComplaint(submitData);
-      navigate('/');
+      const payload = {
+        ...form,
+        userId: currentUser.userId,
+      };
+      await createComplaint(payload, currentUser);
+      navigate('/dashboard');
     } catch (err) {
-      setError('Failed to create complaint. Please try again.');
-      console.error(err);
+      setError('Failed to submit complaint: ' + (err.response?.data || err.message));
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
   return (
     <div className="create-complaint">
-      <div className="card">
-        <h1>Create New Complaint</h1>
-        {error && <div className="error-message">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="title">Title *</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Enter complaint title"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="description">Description *</label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Describe your complaint in detail"
-              rows="5"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="category">Category *</label>
-            <select
-              id="category"
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              required
-            >
-              <option value="CARPENTRY">Carpentry</option>
-              <option value="ELECTRICAL">Electrical</option>
-              <option value="PLUMBING">Plumbing</option>
-              <option value="RAGGING">Ragging</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="userId">Raised By *</label>
-            <select
-              id="userId"
-              name="userId"
-              value={formData.userId}
-              onChange={handleChange}
-              required
-            >
-              {users.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.name} ({user.role})
-                </option>
+      <h2>Raise a New Complaint</h2>
+      {error && <div className="error">{error}</div>}
+      <form onSubmit={handleSubmit}>
+        <div className="form-row">
+          <label>Message Type *
+            <select name="messageType" value={form.messageType} onChange={handleChange} required>
+              {MESSAGE_TYPES.map((t) => (
+                <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>
               ))}
             </select>
-          </div>
+          </label>
 
-          <div className="form-group">
-            <label htmlFor="file">Attachment (Optional)</label>
-            <input
-              type="file"
-              id="file"
-              onChange={handleFileChange}
-              accept="image/*,.pdf,.doc,.docx"
+          <label>Category *
+            <select name="category" value={form.category} onChange={handleChange} required>
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <div className="form-row">
+          <label>Sub Category
+            <select name="subCategory" value={form.subCategory} onChange={handleChange}>
+              <option value="">-- Select Sub Category --</option>
+              {SUB_CATEGORIES[form.category]?.map((sub) => (
+                <option key={sub} value={sub}>{sub}</option>
+              ))}
+            </select>
+          </label>
+
+          <label>Specific Issue
+            <input 
+              name="specificCategory" 
+              value={form.specificCategory} 
+              onChange={handleChange} 
+              placeholder="e.g., Bathroom Shower" 
             />
-          </div>
+          </label>
+        </div>
 
-          <div className="form-actions">
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Complaint'}
-            </button>
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={() => navigate('/')}
-              disabled={loading}
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
+        <div className="form-row">
+          <label>Block
+            <input 
+              name="block" 
+              value={form.block} 
+              onChange={handleChange} 
+              placeholder="e.g., A, B, C" 
+            />
+          </label>
+
+          <label>Sub Block
+            <input 
+              name="subBlock" 
+              value={form.subBlock} 
+              onChange={handleChange} 
+              placeholder="e.g., A1, A2" 
+            />
+          </label>
+        </div>
+
+        <div className="form-row">
+          <label>Room Type
+            <select name="roomType" value={form.roomType} onChange={handleChange}>
+              <option value="">-- Select Room Type --</option>
+              <option value="Single">Single</option>
+              <option value="Double">Double</option>
+              <option value="Triple">Triple</option>
+              <option value="Four Seater">Four Seater</option>
+            </select>
+          </label>
+
+          <label>Room Number
+            <input 
+              name="roomNo" 
+              value={form.roomNo} 
+              onChange={handleChange} 
+              placeholder="e.g., 101, 202" 
+            />
+          </label>
+        </div>
+
+        <div className="form-row">
+          <label>Contact Number
+            <input 
+              type="tel"
+              name="contactNo" 
+              value={form.contactNo} 
+              onChange={handleChange} 
+              placeholder="Your contact number" 
+            />
+          </label>
+
+          <label>Availability Date
+            <input 
+              type="date"
+              name="availabilityDate" 
+              value={form.availabilityDate} 
+              onChange={handleChange}
+              min={new Date().toISOString().split('T')[0]}
+            />
+          </label>
+        </div>
+
+        <label>Preferred Time Slot
+          <select name="timeSlot" value={form.timeSlot} onChange={handleChange}>
+            <option value="">-- Select Time Slot --</option>
+            {TIME_SLOTS.map((slot) => (
+              <option key={slot} value={slot}>{slot}</option>
+            ))}
+          </select>
+        </label>
+
+        <label>Description *
+          <textarea
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            rows={5}
+            placeholder="Describe the issue in detail..."
+            required
+          />
+        </label>
+
+        <div className="form-actions">
+          <button type="button" className="btn-secondary" onClick={() => navigate('/dashboard')}>Cancel</button>
+          <button type="submit" className="btn-primary" disabled={submitting}>
+            {submitting ? 'Submitting...' : 'Submit Complaint'}
+          </button>
+        </div>
+      </form>
     </div>
   );
-};
+}
 
 export default CreateComplaint;
+

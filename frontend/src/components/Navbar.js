@@ -1,29 +1,39 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = () => {
+function Navbar({ currentUser, onLogout }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
+
   return (
     <nav className="navbar">
-      <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
-          Hostel Complaint System
-        </Link>
-        <ul className="navbar-menu">
-          <li>
-            <Link to="/" className="navbar-link">
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link to="/create" className="navbar-link">
-              Create Complaint
-            </Link>
-          </li>
-        </ul>
+      <div className="navbar-brand">
+        <Link to="/dashboard">Hostel Complaint Management</Link>
+      </div>
+      <div className="navbar-links">
+        {currentUser ? (
+          <>
+            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/complaint/new">New Complaint</Link>
+            <span className="navbar-user">
+              {currentUser.username} ({currentUser.role})
+            </span>
+            <button className="btn-logout" onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <>
+            <Link to="/login">Login</Link>
+            <Link to="/signup">Signup</Link>
+          </>
+        )}
       </div>
     </nav>
   );
-};
+}
 
 export default Navbar;

@@ -1,16 +1,49 @@
 package com.hostel.dto;
 
 import com.hostel.entity.Category;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.hostel.entity.MessageType;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class CreateComplaintRequest {
-    private String title;
-    private String description;
+    private MessageType messageType;
     private Category category;
+    private String subCategory;
+    private String specificCategory;
+    private String block;
+    private String subBlock;
+    private String roomType;
+    private String roomNo;
+    private String contactNo;
+    private String availabilityDate;
+    private String timeSlot;
+    private String description;
     private Long userId;
+
+    public CreateComplaintRequest() {}
+
+    public MessageType getMessageType() { return messageType; }
+    public void setMessageType(MessageType messageType) { this.messageType = messageType; }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
+    public String getSubCategory() { return subCategory; }
+    public void setSubCategory(String subCategory) { this.subCategory = subCategory; }
+    public String getSpecificCategory() { return specificCategory; }
+    public void setSpecificCategory(String specificCategory) { this.specificCategory = specificCategory; }
+    public String getBlock() { return block; }
+    public void setBlock(String block) { this.block = block; }
+    public String getSubBlock() { return subBlock; }
+    public void setSubBlock(String subBlock) { this.subBlock = subBlock; }
+    public String getRoomType() { return roomType; }
+    public void setRoomType(String roomType) { this.roomType = roomType; }
+    public String getRoomNo() { return roomNo; }
+    public void setRoomNo(String roomNo) { this.roomNo = roomNo; }
+    public String getContactNo() { return contactNo; }
+    public void setContactNo(String contactNo) { this.contactNo = contactNo; }
+    public String getAvailabilityDate() { return availabilityDate; }
+    public void setAvailabilityDate(String availabilityDate) { this.availabilityDate = availabilityDate; }
+    public String getTimeSlot() { return timeSlot; }
+    public void setTimeSlot(String timeSlot) { this.timeSlot = timeSlot; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 }

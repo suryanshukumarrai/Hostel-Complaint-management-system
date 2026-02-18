@@ -12,22 +12,21 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class UserController {
-    
+
     @Autowired
     private UserService userService;
-    
+
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(userService.getAllUsers());
     }
-    
+
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody Map<String, String> request) {
         String name = request.get("name");
         String role = request.get("role");
-        UserDTO user = userService.createUser(name, role);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(name, role));
     }
 }

@@ -1,13 +1,23 @@
-import api from './api';
+import axios from 'axios';
 
-export const userService = {
-  getAllUsers: async () => {
-    const response = await api.get('/users');
-    return response.data;
-  },
+const BASE_URL = 'http://localhost:8080/api';
 
-  createUser: async (name, role) => {
-    const response = await api.post('/users', { name, role });
-    return response.data;
-  },
+const getAuthHeader = (user) => {
+  if (!user) return {};
+  const token = user.credentials || btoa(`${user.username}:${user.password || ''}`);
+  return { Authorization: `Basic ${token}` };
+};
+
+export const getAllUsers = async (currentUser) => {
+  const response = await axios.get(`${BASE_URL}/users`, {
+    headers: getAuthHeader(currentUser),
+  });
+  return response.data;
+};
+
+export const getUserById = async (id, currentUser) => {
+  const response = await axios.get(`${BASE_URL}/users/${id}`, {
+    headers: getAuthHeader(currentUser),
+  });
+  return response.data;
 };

@@ -1,45 +1,27 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import './ComplaintCard.css';
 
-const ComplaintCard = ({ complaint }) => {
-  const navigate = useNavigate();
-
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'OPEN':
-        return 'status-open';
-      case 'IN_PROGRESS':
-        return 'status-in-progress';
-      case 'RESOLVED':
-        return 'status-resolved';
-      default:
-        return '';
-    }
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString();
-  };
-
-  const handleClick = () => {
-    navigate(`/complaint/${complaint.id}`);
-  };
-
+function ComplaintCard({ complaint, onClick }) {
   return (
-    <tr onClick={handleClick} style={{ cursor: 'pointer' }}>
-      <td>{complaint.id}</td>
-      <td>{complaint.title}</td>
-      <td>{complaint.category}</td>
-      <td>{complaint.assignedTo}</td>
-      <td>
-        <span className={`status-badge ${getStatusClass(complaint.status)}`}>
-          {complaint.status.replace('_', ' ')}
+    <div className="complaint-card" onClick={onClick}>
+      <div className="card-header">
+        <span className="card-id">#{complaint.id}</span>
+        <span className={`status-badge status-${complaint.status?.toLowerCase()}`}>
+          {complaint.status}
         </span>
-      </td>
-      <td>{formatDate(complaint.createdAt)}</td>
-    </tr>
+      </div>
+      <div className="card-category">{complaint.category} — {complaint.messageType}</div>
+      <div className="card-description">
+        {complaint.description?.length > 100
+          ? complaint.description.substring(0, 100) + '...'
+          : complaint.description}
+      </div>
+      <div className="card-footer">
+        <span>{complaint.raisedBy?.name || 'Unknown'}</span>
+        <span>{complaint.createdAt ? new Date(complaint.createdAt).toLocaleDateString() : ''}</span>
+      </div>
+    </div>
   );
-};
+}
 
 export default ComplaintCard;

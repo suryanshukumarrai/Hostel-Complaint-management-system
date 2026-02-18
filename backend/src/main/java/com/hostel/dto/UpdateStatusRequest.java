@@ -1,13 +1,12 @@
 package com.hostel.dto;
 
 import com.hostel.entity.Status;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class UpdateStatusRequest {
     private Status status;
+
+    public UpdateStatusRequest() {}
+
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
 }
