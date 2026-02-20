@@ -50,3 +50,11 @@ export const updateComplaintStatus = async (id, status, currentUser) => {
   });
   return response.data;
 };
+
+export const searchComplaints = async (params, currentUser) => {
+  const response = await axios.get(`${BASE_URL}/complaints/search`, {
+    params,
+    headers: getAuthHeader(currentUser),
+  });
+  return response.data;
+};
