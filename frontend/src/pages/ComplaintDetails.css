@@ -55,6 +55,40 @@
   color: #374151;
 }
 
+.detail-image {
+  margin-bottom: 24px;
+}
+
+.detail-image-thumb {
+  max-width: 200px;
+  max-height: 200px;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+}
+
+.image-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.image-modal {
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.image-modal img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+
 .status-update {
   display: flex;
   align-items: center;

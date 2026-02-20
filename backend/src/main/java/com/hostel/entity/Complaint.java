@@ -72,6 +72,9 @@ public class Complaint {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
+    @Column(name = "image_url")
+    private String imageUrl;
     
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -207,6 +210,14 @@ public class Complaint {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public LocalDateTime getCreatedAt() {

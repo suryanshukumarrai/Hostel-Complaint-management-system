@@ -25,6 +25,7 @@ public class ComplaintDTO {
     private Status status;
     private LocalDateTime createdAt;
     private UserDTO raisedBy;
+    private String imageUrl;
 
     public ComplaintDTO() {}
 
@@ -62,4 +63,6 @@ public class ComplaintDTO {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public UserDTO getRaisedBy() { return raisedBy; }
     public void setRaisedBy(UserDTO raisedBy) { this.raisedBy = raisedBy; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

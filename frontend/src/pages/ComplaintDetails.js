@@ -4,6 +4,7 @@ import { getComplaintById, updateComplaintStatus } from '../services/complaintSe
 import './ComplaintDetails.css';
 
 const STATUSES = ['OPEN', 'IN_PROGRESS', 'RESOLVED'];
+const IMAGE_BASE_URL = 'http://localhost:8080';
 
 function ComplaintDetails({ currentUser }) {
   const { id } = useParams();
@@ -13,6 +14,7 @@ function ComplaintDetails({ currentUser }) {
   const [error, setError] = useState('');
   const [newStatus, setNewStatus] = useState('');
   const [updating, setUpdating] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   useEffect(() => {
     const fetch = async () => {
@@ -64,6 +66,16 @@ function ComplaintDetails({ currentUser }) {
         <div className="detail-item"><span>Assigned To:</span> {complaint.assignedTo || '—'}</div>
         <div className="detail-item"><span>Created:</span> {new Date(complaint.createdAt).toLocaleString()}</div>
       </div>
+      {complaint.imageUrl && (
+        <div className="detail-image">
+          <img
+            src={`${IMAGE_BASE_URL}${complaint.imageUrl}`}
+            alt={`Complaint ${complaint.id}`}
+            className="detail-image-thumb"
+            onClick={() => setShowImageModal(true)}
+          />
+        </div>
+      )}
       <div className="description-box">
         <h4>Description</h4>
         <p>{complaint.description}</p>
@@ -78,6 +90,17 @@ function ComplaintDetails({ currentUser }) {
           <button className="btn-primary" onClick={handleStatusUpdate} disabled={updating}>
             {updating ? 'Updating...' : 'Update'}
           </button>
+        </div>
+      )}
+
+      {showImageModal && complaint.imageUrl && (
+        <div className="image-modal-backdrop" onClick={() => setShowImageModal(false)}>
+          <div className="image-modal" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={`${IMAGE_BASE_URL}${complaint.imageUrl}`}
+              alt={`Complaint ${complaint.id}`}
+            />
+          </div>
         </div>
       )}
     </div>

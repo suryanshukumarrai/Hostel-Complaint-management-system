@@ -1,9 +1,20 @@
 import React from 'react';
 import './ComplaintCard.css';
 
+const IMAGE_BASE_URL = 'http://localhost:8080';
+
 function ComplaintCard({ complaint, onClick }) {
   return (
     <div className="complaint-card" onClick={onClick}>
+      {complaint.imageUrl && (
+        <div className="card-image-wrapper">
+          <img
+            src={`${IMAGE_BASE_URL}${complaint.imageUrl}`}
+            alt={`Complaint ${complaint.id}`}
+            className="complaint-image-thumb"
+          />
+        </div>
+      )}
       <div className="card-header">
         <span className="card-id">#{complaint.id}</span>
         <span className={`status-badge status-${complaint.status?.toLowerCase()}`}>

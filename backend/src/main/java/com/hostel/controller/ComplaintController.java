@@ -8,11 +8,14 @@ import com.hostel.service.ComplaintService;
 import com.hostel.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,8 +31,10 @@ public class ComplaintController {
     private UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<ComplaintDTO> createComplaint(@RequestBody CreateComplaintRequest request) {
-        ComplaintDTO complaint = complaintService.createComplaint(request);
+    public ResponseEntity<ComplaintDTO> createComplaint(
+            @ModelAttribute CreateComplaintRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+        ComplaintDTO complaint = complaintService.createComplaint(request, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(complaint);
     }
 

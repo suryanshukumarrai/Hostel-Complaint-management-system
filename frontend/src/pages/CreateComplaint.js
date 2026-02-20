@@ -40,6 +40,7 @@ function CreateComplaint({ currentUser }) {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [image, setImage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +65,7 @@ function CreateComplaint({ currentUser }) {
         ...form,
         userId: currentUser.userId,
       };
-      await createComplaint(payload, currentUser);
+      await createComplaint(payload, currentUser, image);
       navigate('/dashboard');
     } catch (err) {
       setError('Failed to submit complaint: ' + (err.response?.data || err.message));
@@ -196,6 +197,14 @@ function CreateComplaint({ currentUser }) {
             rows={5}
             placeholder="Describe the issue in detail..."
             required
+          />
+        </label>
+
+        <label>Attach Image (optional)
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0] || null)}
           />
         </label>
 

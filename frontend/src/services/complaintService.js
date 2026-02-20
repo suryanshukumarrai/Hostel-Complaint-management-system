@@ -23,9 +23,23 @@ export const getComplaintById = async (id, currentUser) => {
   return response.data;
 };
 
-export const createComplaint = async (payload, currentUser) => {
-  const response = await axios.post(`${BASE_URL}/complaints`, payload, {
-    headers: getAuthHeader(currentUser),
+export const createComplaint = async (payload, currentUser, imageFile) => {
+  const formData = new FormData();
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      formData.append(key, value);
+    }
+  });
+
+  if (imageFile) {
+    formData.append('image', imageFile);
+  }
+
+  const response = await axios.post(`${BASE_URL}/complaints`, formData, {
+    headers: {
+      ...getAuthHeader(currentUser),
+      // Do NOT set Content-Type manually; let axios set the multipart boundary
+    },
   });
   return response.data;
 };
