@@ -5,6 +5,7 @@ import com.hostel.entity.User;
 import com.hostel.exception.ResourceNotFoundException;
 import com.hostel.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class UserService {
         return convertToDTO(saved);
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(@NonNull Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
