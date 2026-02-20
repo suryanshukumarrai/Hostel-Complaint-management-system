@@ -74,6 +74,17 @@ body {
   text-transform: uppercase;
 }
 
-.status-open        { background: #fef3c7; color: #92400e; }
-.status-in_progress { background: #dbeafe; color: #1e40af; }
-.status-resolved    { background: #d1fae5; color: #065f46; }
+.status-open {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-in_progress {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-resolved {
+  background: #d1fae5;
+  color: #065f46;
+}
