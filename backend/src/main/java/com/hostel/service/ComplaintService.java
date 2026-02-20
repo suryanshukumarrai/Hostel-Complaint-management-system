@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class ComplaintService {
@@ -171,5 +172,48 @@ public class ComplaintService {
         dto.setRaisedBy(userDTO);
 
         return dto;
+    }
+
+    public byte[] exportAllComplaintsCsv() {
+        List<Complaint> complaints = complaintRepository.findAll();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Id,MessageType,Category,SubCategory,SpecificCategory,Block,SubBlock,RoomType,RoomNo,ContactNo,AvailabilityDate,TimeSlot,Description,AssignedTo,Status,CreatedAt,RaisedBy,ImageUrl\n");
+
+        for (Complaint c : complaints) {
+            String id = csvEscape(c.getId());
+            String messageType = csvEscape(c.getMessageType());
+            String category = csvEscape(c.getCategory());
+            String subCategory = csvEscape(c.getSubCategory());
+            String specificCategory = csvEscape(c.getSpecificCategory());
+            String block = csvEscape(c.getBlock());
+            String subBlock = csvEscape(c.getSubBlock());
+            String roomType = csvEscape(c.getRoomType());
+            String roomNo = csvEscape(c.getRoomNo());
+            String contactNo = csvEscape(c.getContactNo());
+            String availabilityDate = csvEscape(c.getAvailabilityDate());
+            String timeSlot = csvEscape(c.getTimeSlot());
+            String description = csvEscape(c.getDescription());
+            String assignedTo = csvEscape(c.getAssignedTo());
+            String status = csvEscape(c.getStatus());
+            String createdAt = csvEscape(c.getCreatedAt());
+            String raisedBy = "";
+            if (c.getRaisedBy() != null) raisedBy = csvEscape(c.getRaisedBy().getFullName());
+            String imageUrl = csvEscape(c.getImageUrl());
+
+            sb.append(String.join(",",
+                    id, messageType, category, subCategory, specificCategory,
+                    block, subBlock, roomType, roomNo, contactNo,
+                    availabilityDate, timeSlot, description, assignedTo, status,
+                    createdAt, raisedBy, imageUrl)).append("\n");
+        }
+
+        return sb.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+    private String csvEscape(Object o) {
+        if (o == null) return "";
+        String s = o.toString();
+        s = s.replace("\"", "\"\"");
+        return "\"" + s + "\"";
     }
 }

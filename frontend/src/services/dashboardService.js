@@ -11,4 +11,14 @@ export const dashboardService = {
     });
     return response.data;
   }
+  ,
+  exportComplaints: async (credentials) => {
+    const response = await axios.get(`${BASE_URL}/admin/complaints/export`, {
+      headers: {
+        Authorization: `Basic ${credentials}`
+      },
+      responseType: 'blob'
+    });
+    return response;
+  }
 };

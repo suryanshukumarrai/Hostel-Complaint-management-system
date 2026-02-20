@@ -52,6 +52,27 @@ function Dashboard({ currentUser }) {
         <button className="btn-primary" onClick={() => navigate('/complaint/new')}>
           + New Complaint
         </button>
+        {isAdmin && (
+          <button className="btn-secondary" style={{marginLeft: '8px'}} onClick={async () => {
+            try {
+              const resp = await dashboardService.exportComplaints(currentUser.credentials);
+              const blob = new Blob([resp.data], { type: 'text/csv' });
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'complaints.csv';
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              window.URL.revokeObjectURL(url);
+            } catch (e) {
+              console.error('Export failed', e);
+              alert('Export failed');
+            }
+          }}>
+            Export CSV
+          </button>
+        )}
       </div>
 
       {/* Admin Stats Section */}

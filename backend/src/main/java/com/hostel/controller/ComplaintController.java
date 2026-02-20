@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
@@ -82,5 +85,17 @@ public class ComplaintController {
             @PathVariable Long id,
             @RequestBody UpdateStatusRequest request) {
         return ResponseEntity.ok(complaintService.updateStatus(id, request.getStatus()));
+    }
+
+    @GetMapping(value = "/export", produces = "text/csv")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ByteArrayResource> exportComplaints() {
+        byte[] data = complaintService.exportAllComplaintsCsv();
+        ByteArrayResource resource = new ByteArrayResource(data);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=complaints.csv")
+                .contentLength(data.length)
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .body(resource);
     }
 }
