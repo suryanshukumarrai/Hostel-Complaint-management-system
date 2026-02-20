@@ -63,7 +63,7 @@ public class ComplaintController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<ComplaintDTO> getComplaintById(@PathVariable Long id, Authentication authentication) {
         // Get logged-in user
         User user = userRepository.findByUsername(authentication.getName())
@@ -80,14 +80,14 @@ public class ComplaintController {
         return ResponseEntity.ok(complaintService.getComplaintByIdWithAuth(id, user, role));
     }
 
-    @RequestMapping(value = "/{id}/status", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    @RequestMapping(value = "/{id:\\d+}/status", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<ComplaintDTO> updateStatus(
             @PathVariable Long id,
             @RequestBody UpdateStatusRequest request) {
         return ResponseEntity.ok(complaintService.updateStatus(id, request.getStatus()));
     }
 
-    @GetMapping(value = "/export", produces = "text/csv")
+    @GetMapping(value = "/export-all", produces = "text/csv")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ByteArrayResource> exportComplaints() {
         byte[] data = complaintService.exportAllComplaintsCsv();

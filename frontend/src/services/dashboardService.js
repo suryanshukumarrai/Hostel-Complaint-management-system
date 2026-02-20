@@ -13,7 +13,7 @@ export const dashboardService = {
   }
   ,
   exportComplaints: async (credentials) => {
-    const response = await axios.get(`${BASE_URL}/admin/complaints/export`, {
+    const response = await axios.get(`${BASE_URL}/complaints/export-all`, {
       headers: {
         Authorization: `Basic ${credentials}`
       },
