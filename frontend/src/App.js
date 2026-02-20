@@ -23,7 +23,6 @@ function App() {
     setUsername(null);
   };
 
-  // currentUser object passed down to pages
   const currentUser = isAuthenticated
     ? {
         username,
@@ -33,26 +32,26 @@ function App() {
     : null;
 
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Navbar currentUser={currentUser} onLogout={handleLogout} />
       <div className="app-container">
         <Routes>
           <Route path="/login" element={
-            isAuthenticated ? <Navigate to="/dashboard" /> : <Login />
+            isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
           } />
           <Route path="/signup" element={
-            isAuthenticated ? <Navigate to="/dashboard" /> : <Signup />
+            isAuthenticated ? <Navigate to="/dashboard" replace /> : <Signup />
           } />
           <Route path="/dashboard" element={
-            isAuthenticated ? <Dashboard currentUser={currentUser} /> : <Navigate to="/login" />
+            isAuthenticated ? <Dashboard currentUser={currentUser} /> : <Navigate to="/login" replace />
           } />
           <Route path="/complaint/new" element={
-            isAuthenticated ? <CreateComplaint currentUser={currentUser} /> : <Navigate to="/login" />
+            isAuthenticated ? <CreateComplaint currentUser={currentUser} /> : <Navigate to="/login" replace />
           } />
           <Route path="/complaint/:id" element={
-            isAuthenticated ? <ComplaintDetails currentUser={currentUser} /> : <Navigate to="/login" />
+            isAuthenticated ? <ComplaintDetails currentUser={currentUser} /> : <Navigate to="/login" replace />
           } />
-          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </div>
     </Router>

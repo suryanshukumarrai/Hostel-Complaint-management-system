@@ -4,5 +4,6 @@ public enum Category {
     CARPENTRY,
     ELECTRICAL,
     PLUMBING,
-    RAGGING
+    RAGGING,
+    GENERAL
 }

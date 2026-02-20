@@ -140,6 +140,7 @@ public class ComplaintService {
             case RAGGING -> "Shyam";
             case ELECTRICAL -> "Electric Team";
             case PLUMBING -> "Plumber Team";
+            case GENERAL -> "Admin Team";
         };
     }
 
@@ -159,8 +160,18 @@ public class ComplaintService {
         dto.setTimeSlot(c.getTimeSlot());
         dto.setDescription(c.getDescription());
         dto.setAssignedTo(c.getAssignedTo());
+        dto.setAssignedTeam(c.getAssignedTeam());
+        dto.setComplaintDate(c.getComplaintDate());
+        dto.setPhoneNumber(c.getPhoneNumber());
+        dto.setType(c.getType());
+        dto.setStudentName(c.getStudentName());
+        dto.setBuildingCode(c.getBuildingCode());
+        dto.setPreferredTimeSlot(c.getPreferredTimeSlot());
+        dto.setPriorityLevel(c.getPriorityLevel());
+        dto.setAttachmentPath(c.getAttachmentPath());
         dto.setStatus(c.getStatus());
         dto.setCreatedAt(c.getCreatedAt());
+        dto.setCreatedTimestamp(c.getCreatedTimestamp());
         dto.setImageUrl(c.getImageUrl());
 
         User u = c.getRaisedBy();

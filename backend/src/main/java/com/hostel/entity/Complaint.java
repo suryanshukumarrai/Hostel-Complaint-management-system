@@ -68,6 +68,33 @@ public class Complaint {
     
     @Column(name = "assigned_to")
     private String assignedTo;
+
+    @Column(name = "assigned_team")
+    private String assignedTeam;
+
+    @Column(name = "complaint_date")
+    private LocalDate complaintDate;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "student_name")
+    private String studentName;
+
+    @Column(name = "building_code")
+    private String buildingCode;
+
+    @Column(name = "preferred_time_slot")
+    private String preferredTimeSlot;
+
+    @Column(name = "priority_level")
+    private Integer priorityLevel;
+
+    @Column(name = "attachment_path")
+    private String attachmentPath;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -79,6 +106,10 @@ public class Complaint {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @CreationTimestamp
+    @Column(name = "created_timestamp", updatable = false)
+    private LocalDateTime createdTimestamp;
 
     // Constructors
     public Complaint() {}
@@ -204,6 +235,78 @@ public class Complaint {
         this.assignedTo = assignedTo;
     }
 
+    public String getAssignedTeam() {
+        return assignedTeam;
+    }
+
+    public void setAssignedTeam(String assignedTeam) {
+        this.assignedTeam = assignedTeam;
+    }
+
+    public LocalDate getComplaintDate() {
+        return complaintDate;
+    }
+
+    public void setComplaintDate(LocalDate complaintDate) {
+        this.complaintDate = complaintDate;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public String getBuildingCode() {
+        return buildingCode;
+    }
+
+    public void setBuildingCode(String buildingCode) {
+        this.buildingCode = buildingCode;
+    }
+
+    public String getPreferredTimeSlot() {
+        return preferredTimeSlot;
+    }
+
+    public void setPreferredTimeSlot(String preferredTimeSlot) {
+        this.preferredTimeSlot = preferredTimeSlot;
+    }
+
+    public Integer getPriorityLevel() {
+        return priorityLevel;
+    }
+
+    public void setPriorityLevel(Integer priorityLevel) {
+        this.priorityLevel = priorityLevel;
+    }
+
+    public String getAttachmentPath() {
+        return attachmentPath;
+    }
+
+    public void setAttachmentPath(String attachmentPath) {
+        this.attachmentPath = attachmentPath;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -226,5 +329,13 @@ public class Complaint {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+
+    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
     }
 }

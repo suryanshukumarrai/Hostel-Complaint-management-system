@@ -22,8 +22,18 @@ public class ComplaintDTO {
     private String timeSlot;
     private String description;
     private String assignedTo;
+    private String assignedTeam;
+    private LocalDate complaintDate;
+    private String phoneNumber;
+    private String type;
+    private String studentName;
+    private String buildingCode;
+    private String preferredTimeSlot;
+    private Integer priorityLevel;
+    private String attachmentPath;
     private Status status;
     private LocalDateTime createdAt;
+    private LocalDateTime createdTimestamp;
     private UserDTO raisedBy;
     private String imageUrl;
 
@@ -57,10 +67,30 @@ public class ComplaintDTO {
     public void setDescription(String description) { this.description = description; }
     public String getAssignedTo() { return assignedTo; }
     public void setAssignedTo(String assignedTo) { this.assignedTo = assignedTo; }
+    public String getAssignedTeam() { return assignedTeam; }
+    public void setAssignedTeam(String assignedTeam) { this.assignedTeam = assignedTeam; }
+    public LocalDate getComplaintDate() { return complaintDate; }
+    public void setComplaintDate(LocalDate complaintDate) { this.complaintDate = complaintDate; }
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    public String getStudentName() { return studentName; }
+    public void setStudentName(String studentName) { this.studentName = studentName; }
+    public String getBuildingCode() { return buildingCode; }
+    public void setBuildingCode(String buildingCode) { this.buildingCode = buildingCode; }
+    public String getPreferredTimeSlot() { return preferredTimeSlot; }
+    public void setPreferredTimeSlot(String preferredTimeSlot) { this.preferredTimeSlot = preferredTimeSlot; }
+    public Integer getPriorityLevel() { return priorityLevel; }
+    public void setPriorityLevel(Integer priorityLevel) { this.priorityLevel = priorityLevel; }
+    public String getAttachmentPath() { return attachmentPath; }
+    public void setAttachmentPath(String attachmentPath) { this.attachmentPath = attachmentPath; }
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getCreatedTimestamp() { return createdTimestamp; }
+    public void setCreatedTimestamp(LocalDateTime createdTimestamp) { this.createdTimestamp = createdTimestamp; }
     public UserDTO getRaisedBy() { return raisedBy; }
     public void setRaisedBy(UserDTO raisedBy) { this.raisedBy = raisedBy; }
     public String getImageUrl() { return imageUrl; }
