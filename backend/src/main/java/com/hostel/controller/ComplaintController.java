@@ -11,12 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,7 +36,7 @@ public class ComplaintController {
 
     @PostMapping
     public ResponseEntity<ComplaintDTO> createComplaint(
-            @ModelAttribute CreateComplaintRequest request,
+            @ModelAttribute @NonNull CreateComplaintRequest request,
             @RequestPart(value = "image", required = false) MultipartFile image) {
         ComplaintDTO complaint = complaintService.createComplaint(request, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(complaint);
@@ -64,7 +65,7 @@ public class ComplaintController {
     }
 
     @GetMapping("/{id:\\d+}")
-    public ResponseEntity<ComplaintDTO> getComplaintById(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<ComplaintDTO> getComplaintById(@PathVariable @NonNull Long id, Authentication authentication) {
         // Get logged-in user
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -82,20 +83,18 @@ public class ComplaintController {
 
     @RequestMapping(value = "/{id:\\d+}/status", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<ComplaintDTO> updateStatus(
-            @PathVariable Long id,
+            @PathVariable @NonNull Long id,
             @RequestBody UpdateStatusRequest request) {
         return ResponseEntity.ok(complaintService.updateStatus(id, request.getStatus()));
     }
 
     @GetMapping(value = "/export-all", produces = "text/csv")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ByteArrayResource> exportComplaints() {
-        byte[] data = complaintService.exportAllComplaintsCsv();
-        ByteArrayResource resource = new ByteArrayResource(data);
+    public ResponseEntity<StreamingResponseBody> exportComplaints() {
+        StreamingResponseBody stream = outputStream -> complaintService.streamComplaintsCsv(outputStream);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=complaints.csv")
-                .contentLength(data.length)
                 .contentType(MediaType.parseMediaType("text/csv"))
-                .body(resource);
+                .body(stream);
     }
 }
