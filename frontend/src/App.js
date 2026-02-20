@@ -26,35 +26,33 @@ function App() {
   // currentUser object passed down to pages
   const currentUser = isAuthenticated
     ? {
-        username,
-        credentials: authService.getStoredCredentials(),
-        ...( authService.getUserInfo() || {} )
-      }
+      username,
+      credentials: authService.getStoredCredentials(),
+      ...(authService.getUserInfo() || {})
+    }
     : null;
 
   return (
     <Router>
       <Navbar currentUser={currentUser} onLogout={handleLogout} />
-      <div className="app-container">
-        <Routes>
-          <Route path="/login" element={
-            isAuthenticated ? <Navigate to="/dashboard" /> : <Login />
-          } />
-          <Route path="/signup" element={
-            isAuthenticated ? <Navigate to="/dashboard" /> : <Signup />
-          } />
-          <Route path="/dashboard" element={
-            isAuthenticated ? <Dashboard currentUser={currentUser} /> : <Navigate to="/login" />
-          } />
-          <Route path="/complaint/new" element={
-            isAuthenticated ? <CreateComplaint currentUser={currentUser} /> : <Navigate to="/login" />
-          } />
-          <Route path="/complaint/:id" element={
-            isAuthenticated ? <ComplaintDetails currentUser={currentUser} /> : <Navigate to="/login" />
-          } />
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/login" element={
+          isAuthenticated ? <Navigate to="/dashboard" /> : <Login />
+        } />
+        <Route path="/signup" element={
+          isAuthenticated ? <Navigate to="/dashboard" /> : <Signup />
+        } />
+        <Route path="/dashboard" element={
+          isAuthenticated ? <Dashboard currentUser={currentUser} /> : <Navigate to="/login" />
+        } />
+        <Route path="/complaint/new" element={
+          isAuthenticated ? <CreateComplaint currentUser={currentUser} /> : <Navigate to="/login" />
+        } />
+        <Route path="/complaint/:id" element={
+          isAuthenticated ? <ComplaintDetails currentUser={currentUser} /> : <Navigate to="/login" />
+        } />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+      </Routes>
     </Router>
   );
 }

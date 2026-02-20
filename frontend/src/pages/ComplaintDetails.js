@@ -48,38 +48,40 @@ function ComplaintDetails({ currentUser }) {
   const isAdmin = currentUser?.role === 'ADMIN';
 
   return (
-    <div className="complaint-details">
-      <button className="btn-back" onClick={() => navigate('/dashboard')}>← Back</button>
-      <h2>Complaint #{complaint.id}</h2>
-      <div className="detail-grid">
-        <div className="detail-item"><span>Type:</span> {complaint.messageType}</div>
-        <div className="detail-item"><span>Category:</span> {complaint.category}</div>
-        <div className="detail-item"><span>Sub Category:</span> {complaint.subCategory || '—'}</div>
-        <div className="detail-item"><span>Block:</span> {complaint.block || '—'}</div>
-        <div className="detail-item"><span>Contact:</span> {complaint.contactNo || '—'}</div>
-        <div className="detail-item"><span>Status:</span>
-          <span className={`status-badge status-${complaint.status?.toLowerCase()}`}>{complaint.status}</span>
+    <div className="app-container">
+      <div className="complaint-details">
+        <button className="btn-back" onClick={() => navigate('/dashboard')}>← Back</button>
+        <h2>Complaint #{complaint.id}</h2>
+        <div className="detail-grid">
+          <div className="detail-item"><span>Type:</span> {complaint.messageType}</div>
+          <div className="detail-item"><span>Category:</span> {complaint.category}</div>
+          <div className="detail-item"><span>Sub Category:</span> {complaint.subCategory || '—'}</div>
+          <div className="detail-item"><span>Block:</span> {complaint.block || '—'}</div>
+          <div className="detail-item"><span>Contact:</span> {complaint.contactNo || '—'}</div>
+          <div className="detail-item"><span>Status:</span>
+            <span className={`status-badge status-${complaint.status?.toLowerCase()}`}>{complaint.status}</span>
+          </div>
+          <div className="detail-item"><span>Raised By:</span> {complaint.raisedBy?.name || '—'}</div>
+          <div className="detail-item"><span>Assigned To:</span> {complaint.assignedTo || '—'}</div>
+          <div className="detail-item"><span>Created:</span> {new Date(complaint.createdAt).toLocaleString()}</div>
         </div>
-        <div className="detail-item"><span>Raised By:</span> {complaint.raisedBy?.name || '—'}</div>
-        <div className="detail-item"><span>Assigned To:</span> {complaint.assignedTo || '—'}</div>
-        <div className="detail-item"><span>Created:</span> {new Date(complaint.createdAt).toLocaleString()}</div>
-      </div>
-      <div className="description-box">
-        <h4>Description</h4>
-        <p>{complaint.description}</p>
-      </div>
+        <div className="description-box">
+          <h4>Description</h4>
+          <p>{complaint.description}</p>
+        </div>
 
-      {isAdmin && (
-        <div className="status-update">
-          <h4>Update Status</h4>
-          <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
-            {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-          </select>
-          <button className="btn-primary" onClick={handleStatusUpdate} disabled={updating}>
-            {updating ? 'Updating...' : 'Update'}
-          </button>
-        </div>
-      )}
+        {isAdmin && (
+          <div className="status-update">
+            <h4>Update Status</h4>
+            <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
+              {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+            <button className="btn-primary" onClick={handleStatusUpdate} disabled={updating}>
+              {updating ? 'Updating...' : 'Update'}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

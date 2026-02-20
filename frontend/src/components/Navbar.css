@@ -3,15 +3,18 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
-  background-color: #1e3a8a;
+  height: 64px;
+  background: rgba(30, 58, 138, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  padding: 0 32px;
+  z-index: 2000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand a {

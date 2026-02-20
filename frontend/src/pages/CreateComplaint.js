@@ -74,138 +74,140 @@ function CreateComplaint({ currentUser }) {
   };
 
   return (
-    <div className="create-complaint">
-      <h2>Raise a New Complaint</h2>
-      {error && <div className="error">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-row">
-          <label>Message Type *
-            <select name="messageType" value={form.messageType} onChange={handleChange} required>
-              {MESSAGE_TYPES.map((t) => (
-                <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>
+    <div className="app-container">
+      <div className="create-complaint">
+        <h2>Raise a New Complaint</h2>
+        {error && <div className="error">{error}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-row">
+            <label>Message Type *
+              <select name="messageType" value={form.messageType} onChange={handleChange} required>
+                {MESSAGE_TYPES.map((t) => (
+                  <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>
+                ))}
+              </select>
+            </label>
+
+            <label>Category *
+              <select name="category" value={form.category} onChange={handleChange} required>
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div className="form-row">
+            <label>Sub Category
+              <select name="subCategory" value={form.subCategory} onChange={handleChange}>
+                <option value="">-- Select Sub Category --</option>
+                {SUB_CATEGORIES[form.category]?.map((sub) => (
+                  <option key={sub} value={sub}>{sub}</option>
+                ))}
+              </select>
+            </label>
+
+            <label>Specific Issue
+              <input
+                name="specificCategory"
+                value={form.specificCategory}
+                onChange={handleChange}
+                placeholder="e.g., Bathroom Shower"
+              />
+            </label>
+          </div>
+
+          <div className="form-row">
+            <label>Block
+              <input
+                name="block"
+                value={form.block}
+                onChange={handleChange}
+                placeholder="e.g., A, B, C"
+              />
+            </label>
+
+            <label>Sub Block
+              <input
+                name="subBlock"
+                value={form.subBlock}
+                onChange={handleChange}
+                placeholder="e.g., A1, A2"
+              />
+            </label>
+          </div>
+
+          <div className="form-row">
+            <label>Room Type
+              <select name="roomType" value={form.roomType} onChange={handleChange}>
+                <option value="">-- Select Room Type --</option>
+                <option value="Single">Single</option>
+                <option value="Double">Double</option>
+                <option value="Triple">Triple</option>
+                <option value="Four Seater">Four Seater</option>
+              </select>
+            </label>
+
+            <label>Room Number
+              <input
+                name="roomNo"
+                value={form.roomNo}
+                onChange={handleChange}
+                placeholder="e.g., 101, 202"
+              />
+            </label>
+          </div>
+
+          <div className="form-row">
+            <label>Contact Number
+              <input
+                type="tel"
+                name="contactNo"
+                value={form.contactNo}
+                onChange={handleChange}
+                placeholder="Your contact number"
+              />
+            </label>
+
+            <label>Availability Date
+              <input
+                type="date"
+                name="availabilityDate"
+                value={form.availabilityDate}
+                onChange={handleChange}
+                min={new Date().toISOString().split('T')[0]}
+              />
+            </label>
+          </div>
+
+          <label>Preferred Time Slot
+            <select name="timeSlot" value={form.timeSlot} onChange={handleChange}>
+              <option value="">-- Select Time Slot --</option>
+              {TIME_SLOTS.map((slot) => (
+                <option key={slot} value={slot}>{slot}</option>
               ))}
             </select>
           </label>
 
-          <label>Category *
-            <select name="category" value={form.category} onChange={handleChange} required>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        <div className="form-row">
-          <label>Sub Category
-            <select name="subCategory" value={form.subCategory} onChange={handleChange}>
-              <option value="">-- Select Sub Category --</option>
-              {SUB_CATEGORIES[form.category]?.map((sub) => (
-                <option key={sub} value={sub}>{sub}</option>
-              ))}
-            </select>
-          </label>
-
-          <label>Specific Issue
-            <input 
-              name="specificCategory" 
-              value={form.specificCategory} 
-              onChange={handleChange} 
-              placeholder="e.g., Bathroom Shower" 
-            />
-          </label>
-        </div>
-
-        <div className="form-row">
-          <label>Block
-            <input 
-              name="block" 
-              value={form.block} 
-              onChange={handleChange} 
-              placeholder="e.g., A, B, C" 
-            />
-          </label>
-
-          <label>Sub Block
-            <input 
-              name="subBlock" 
-              value={form.subBlock} 
-              onChange={handleChange} 
-              placeholder="e.g., A1, A2" 
-            />
-          </label>
-        </div>
-
-        <div className="form-row">
-          <label>Room Type
-            <select name="roomType" value={form.roomType} onChange={handleChange}>
-              <option value="">-- Select Room Type --</option>
-              <option value="Single">Single</option>
-              <option value="Double">Double</option>
-              <option value="Triple">Triple</option>
-              <option value="Four Seater">Four Seater</option>
-            </select>
-          </label>
-
-          <label>Room Number
-            <input 
-              name="roomNo" 
-              value={form.roomNo} 
-              onChange={handleChange} 
-              placeholder="e.g., 101, 202" 
-            />
-          </label>
-        </div>
-
-        <div className="form-row">
-          <label>Contact Number
-            <input 
-              type="tel"
-              name="contactNo" 
-              value={form.contactNo} 
-              onChange={handleChange} 
-              placeholder="Your contact number" 
-            />
-          </label>
-
-          <label>Availability Date
-            <input 
-              type="date"
-              name="availabilityDate" 
-              value={form.availabilityDate} 
+          <label>Description *
+            <textarea
+              name="description"
+              value={form.description}
               onChange={handleChange}
-              min={new Date().toISOString().split('T')[0]}
+              rows={5}
+              placeholder="Describe the issue in detail..."
+              required
             />
           </label>
-        </div>
 
-        <label>Preferred Time Slot
-          <select name="timeSlot" value={form.timeSlot} onChange={handleChange}>
-            <option value="">-- Select Time Slot --</option>
-            {TIME_SLOTS.map((slot) => (
-              <option key={slot} value={slot}>{slot}</option>
-            ))}
-          </select>
-        </label>
-
-        <label>Description *
-          <textarea
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            rows={5}
-            placeholder="Describe the issue in detail..."
-            required
-          />
-        </label>
-
-        <div className="form-actions">
-          <button type="button" className="btn-secondary" onClick={() => navigate('/dashboard')}>Cancel</button>
-          <button type="submit" className="btn-primary" disabled={submitting}>
-            {submitting ? 'Submitting...' : 'Submit Complaint'}
-          </button>
-        </div>
-      </form>
+          <div className="form-actions">
+            <button type="button" className="btn-secondary" onClick={() => navigate('/dashboard')}>Cancel</button>
+            <button type="submit" className="btn-primary" disabled={submitting}>
+              {submitting ? 'Submitting...' : 'Submit Complaint'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
