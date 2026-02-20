@@ -22,6 +22,13 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public List<UserDTO> getClients() {
+        return userRepository.findAll().stream()
+                .filter(u -> "CLIENT".equalsIgnoreCase(u.getRole()))
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     public UserDTO createUser(String name, String role) {
         User user = new User();
         user.setFullName(name);
