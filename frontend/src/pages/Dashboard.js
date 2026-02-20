@@ -11,17 +11,75 @@ function Dashboard({ currentUser }) {
   const [loading, setLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
+  // FAQ state
+  const [faqOpen, setFaqOpen] = useState(false);
+  const [activeFaq, setActiveFaq] = useState(null);
+
+  const navigate = useNavigate();
   const isAdmin = currentUser?.role === 'ADMIN';
+
+  // ---------------- FAQ DATA ----------------
+  const faqs = [
+    {
+      id: 1,
+      question: "How much time does it take to solve a plumbing problem?",
+      answer: "Minor plumbing issues are usually resolved within 24–48 hours. Major pipe or leakage problems may take up to 3 days."
+    },
+    {
+      id: 2,
+      question: "Do we need to pay for repair or replacement?",
+      answer: "If damage is due to normal wear and tear, it is free. If caused intentionally or by negligence, charges may apply."
+    },
+    {
+      id: 3,
+      question: "How long does electrical complaint resolution take?",
+      answer: "Electrical issues are prioritized and usually resolved within 24 hours."
+    },
+    {
+      id: 4,
+      question: "Can I track my complaint status?",
+      answer: "Yes, go to Dashboard → My Complaints to track real-time status."
+    },
+    {
+      id: 5,
+      question: "Can I cancel a complaint after submission?",
+      answer: "You cannot cancel it directly, but you can contact the warden or mark it resolved if fixed."
+    },
+    {
+      id: 6,
+      question: "What if my complaint is not resolved on time?",
+      answer: "You can escalate it by contacting hostel administration."
+    },
+    {
+      id: 7,
+      question: "Will I be informed before maintenance staff visit?",
+      answer: "Yes, staff usually coordinate with you before entering your room."
+    },
+    {
+      id: 8,
+      question: "What are common carpentry repair timelines?",
+      answer: "Door or cupboard repairs are typically resolved within 48–72 hours."
+    },
+    {
+      id: 9,
+      question: "Can I reopen a resolved complaint?",
+      answer: "Yes, if the issue persists, you may submit a new complaint referencing the previous one."
+    },
+    {
+      id: 10,
+      question: "Are emergency complaints handled faster?",
+      answer: "Yes. Water leakage, power failure, and safety issues are treated as high priority."
+    }
+  ];
+  // ------------------------------------------------
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getAllComplaints(currentUser);
         setComplaints(data);
-        
-        // Fetch stats if admin
+
         if (isAdmin) {
           setStatsLoading(true);
           try {
@@ -39,6 +97,7 @@ function Dashboard({ currentUser }) {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [currentUser, isAdmin]);
 
@@ -47,6 +106,8 @@ function Dashboard({ currentUser }) {
 
   return (
     <div className="dashboard">
+
+      {/* ---------------- HEADER ---------------- */}
       <div className="dashboard-header">
         <h2>{isAdmin ? 'Admin Dashboard' : 'My Complaints'}</h2>
         <button className="btn-primary" onClick={() => navigate('/complaint/new')}>
@@ -54,14 +115,13 @@ function Dashboard({ currentUser }) {
         </button>
       </div>
 
-      {/* Admin Stats Section */}
+      {/* ---------------- ADMIN STATS ---------------- */}
       {isAdmin && (
         <div className="admin-stats-section">
           {statsLoading ? (
             <div className="stats-loading">Loading statistics...</div>
           ) : stats ? (
             <>
-              {/* Status Counter Cards */}
               <div className="stats-cards">
                 <div className="stat-card total">
                   <div className="stat-value">{stats.total}</div>
@@ -81,7 +141,6 @@ function Dashboard({ currentUser }) {
                 </div>
               </div>
 
-              {/* Category Breakdown */}
               <div className="category-breakdown">
                 <h3>Category Breakdown</h3>
                 <div className="category-list">
@@ -98,7 +157,7 @@ function Dashboard({ currentUser }) {
         </div>
       )}
 
-      {/* Complaints List */}
+      {/* ---------------- COMPLAINT LIST ---------------- */}
       {complaints.length === 0 ? (
         <p className="no-complaints">No complaints found. {!isAdmin && 'Create your first one!'}</p>
       ) : (
@@ -110,6 +169,47 @@ function Dashboard({ currentUser }) {
               onClick={() => navigate(`/complaint/${c.id}`)}
             />
           ))}
+        </div>
+      )}
+
+      {/* ---------------- FAQ FLOATING BUTTON ---------------- */}
+      <div className="faq-button" onClick={() => setFaqOpen(!faqOpen)}>
+        ?
+      </div>
+
+      {faqOpen && (
+        <div className="faq-popup">
+          <div className="faq-header">
+            <h4>Frequently Asked Questions</h4>
+            <span onClick={() => setFaqOpen(false)}>✖</span>
+          </div>
+
+          <div className="faq-content">
+            {faqs.map((faq) => (
+              <div key={faq.id} className="faq-item">
+                <div
+                  className="faq-question"
+                  onClick={() =>
+                    setActiveFaq(activeFaq === faq.id ? null : faq.id)
+                  }
+                >
+                  {faq.question}
+                </div>
+
+                {activeFaq === faq.id && (
+                  <div className="faq-answer">
+                    {faq.answer}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="faq-footer">
+            <button onClick={() => navigate('/complaint/new')}>
+              Still Need Help?
+            </button>
+          </div>
         </div>
       )}
     </div>

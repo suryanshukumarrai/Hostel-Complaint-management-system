@@ -1,16 +1,49 @@
+/* ===================================================== */
+/* ================= DASHBOARD LAYOUT ================== */
+/* ===================================================== */
+
+.dashboard {
+  padding: 30px;
+  background-color: #f5f7fb;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ================= HEADER ================= */
+
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .dashboard-header h2 {
-  font-size: 1.6rem;
+  font-size: 1.7rem;
+  font-weight: 700;
   color: #1e3a8a;
 }
 
-/* Admin Stats Section */
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  border: none;
+  padding: 10px 18px;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* ===================================================== */
+/* ================= ADMIN STATS ======================= */
+/* ===================================================== */
+
 .admin-stats-section {
   margin-bottom: 32px;
 }
@@ -30,17 +63,17 @@
 
 .stat-card {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   text-align: center;
   border-left: 4px solid;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
 }
 
 .stat-card.total {
@@ -60,7 +93,7 @@
 }
 
 .stat-value {
-  font-size: 2.5rem;
+  font-size: 2.3rem;
   font-weight: bold;
   margin-bottom: 8px;
   color: #1e3a8a;
@@ -68,18 +101,19 @@
 
 .stat-label {
   color: #6b7280;
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* Category Breakdown */
+/* ================= CATEGORY BREAKDOWN ================= */
+
 .category-breakdown {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 .category-breakdown h3 {
@@ -99,13 +133,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: #f9fafb;
-  border-radius: 6px;
+  background: #f3f4f6;
+  border-radius: 8px;
   transition: background 0.2s;
 }
 
 .category-item:hover {
-  background: #f3f4f6;
+  background: #e5e7eb;
 }
 
 .category-name {
@@ -118,14 +152,18 @@
   background: #3b82f6;
   color: white;
   padding: 4px 12px;
-  border-radius: 12px;
+  border-radius: 20px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
+
+/* ===================================================== */
+/* ================= COMPLAINT GRID ==================== */
+/* ===================================================== */
 
 .complaint-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
 }
 
@@ -136,12 +174,160 @@
   font-size: 1.1rem;
 }
 
+.loading,
+.error {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2rem;
+}
+
+/* ===================================================== */
+/* ================= FAQ FLOAT BUTTON ================== */
+/* ===================================================== */
+
+.faq-button {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 58px;
+  height: 58px;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+  transition: 0.2s ease;
+  z-index: 1000;
+}
+
+.faq-button:hover {
+  transform: scale(1.1);
+}
+
+/* ===================================================== */
+/* ================= FAQ POPUP ========================= */
+/* ===================================================== */
+
+.faq-popup {
+  position: fixed;
+  bottom: 95px;
+  right: 25px;
+  width: 380px;
+  max-height: 520px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeInUp 0.25s ease;
+  z-index: 1000;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faq-header {
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  color: white;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.faq-header span {
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.faq-content {
+  padding: 15px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.faq-item {
+  margin-bottom: 10px;
+}
+
+.faq-question {
+  background: #f3f4f6;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.faq-question:hover {
+  background: #e5e7eb;
+}
+
+.faq-answer {
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.faq-footer {
+  padding: 12px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.faq-footer button {
+  width: 100%;
+  padding: 10px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.faq-footer button:hover {
+  background: #2563eb;
+}
+
+/* ===================================================== */
+/* ================= RESPONSIVE ======================== */
+/* ===================================================== */
+
 @media (max-width: 768px) {
   .stats-cards {
     grid-template-columns: 1fr 1fr;
   }
-  
+
   .complaint-grid {
     grid-template-columns: 1fr;
+  }
+
+  .faq-popup {
+    width: 90%;
+    right: 5%;
   }
 }
