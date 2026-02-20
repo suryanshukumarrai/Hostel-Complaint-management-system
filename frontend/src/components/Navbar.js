@@ -13,7 +13,7 @@ function Navbar({ currentUser, onLogout }) {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/dashboard">🏢 DormCare Elite</Link>
+        <Link to="/dashboard">Hostel Complaint Management</Link>
       </div>
       <div className="navbar-links">
         {currentUser ? (
