@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 
 @Service
+@SuppressWarnings("null")
 public class AgentQaService {
 
     @Autowired
