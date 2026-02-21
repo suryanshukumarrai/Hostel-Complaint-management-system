@@ -6,6 +6,7 @@ import CreateComplaint from './pages/CreateComplaint';
 import ComplaintDetails from './pages/ComplaintDetails';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Statistics from './pages/Statistics';
 import AiAssistant from './pages/AiAssistant';
 import { authService } from './services/authService';
 
@@ -55,6 +56,9 @@ function App() {
           } />
           <Route path="/complaint/:id" element={
             isAuthenticated ? <ComplaintDetails currentUser={currentUser} /> : <Navigate to="/login" />
+          } />
+          <Route path="/statistics" element={
+            isAuthenticated ? <Statistics currentUser={currentUser} /> : <Navigate to="/login" />
           } />
           <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
