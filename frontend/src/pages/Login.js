@@ -41,7 +41,7 @@ function Login() {
         <p className="subtitle">Hostel Complaint Management System</p>
 
         {error && <div className="error-message">{error}</div>}
-
+        
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Username *</label>

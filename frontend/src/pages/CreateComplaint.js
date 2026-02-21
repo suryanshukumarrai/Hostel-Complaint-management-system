@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { createComplaint } from '../services/complaintService';
 import './CreateComplaint.css';
 
@@ -24,9 +24,12 @@ const TIME_SLOTS = [
 
 function CreateComplaint({ currentUser }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromAiState = location.state || {};
+
   const [form, setForm] = useState({
     messageType: 'GRIEVANCE',
-    category: 'PLUMBING',
+    category: fromAiState.category || 'PLUMBING',
     subCategory: '',
     specificCategory: '',
     block: '',
@@ -36,7 +39,7 @@ function CreateComplaint({ currentUser }) {
     contactNo: '',
     availabilityDate: '',
     timeSlot: '',
-    description: '',
+    description: fromAiState.description || '',
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -77,6 +80,11 @@ function CreateComplaint({ currentUser }) {
   return (
     <div className="create-complaint">
       <h2>Raise a New Complaint</h2>
+      {fromAiState.fromAi && (
+        <div className="info-banner">
+          We have pre-filled the description (and suggested category) from your AI assistant message. Please review and complete the remaining details.
+        </div>
+      )}
       {error && <div className="error">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="form-row">
