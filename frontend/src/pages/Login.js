@@ -39,7 +39,7 @@ function Login() {
       <div className="login-card">
         <h2>Login</h2>
         <p className="subtitle">Hostel Complaint Management System</p>
-        
+
         {error && <div className="error-message">{error}</div>}
         
         <form onSubmit={handleSubmit}>

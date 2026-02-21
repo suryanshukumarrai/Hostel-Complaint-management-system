@@ -52,6 +52,7 @@ public class RagLlmClient {
         String urlWithKey = apiUrl + (apiUrl.contains("?") ? "&" : "?") + "key=" + apiKey;
 
         try {
+            @SuppressWarnings("unchecked")
             Map<String, Object> response = restTemplate.postForObject(urlWithKey, entity, Map.class);
             if (response == null) {
                 return "No response from LLM API.";
