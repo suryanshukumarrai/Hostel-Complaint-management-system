@@ -10,10 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,7 +39,7 @@ public class ComplaintController {
 
     @PostMapping
     public ResponseEntity<ComplaintDTO> createComplaint(
-            @ModelAttribute CreateComplaintRequest request,
+            @ModelAttribute @NonNull CreateComplaintRequest request,
             @RequestPart(value = "image", required = false) MultipartFile image) {
         ComplaintDTO complaint = complaintService.createComplaint(request, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(complaint);
@@ -63,33 +67,33 @@ public class ComplaintController {
         }
     }
 
-            @GetMapping("/search")
-            public ResponseEntity<List<ComplaintDTO>> searchComplaints(
-                Authentication authentication,
-                @RequestParam(value = "q", required = false) String query,
-                @RequestParam(value = "agent", required = false) String agent,
-                @RequestParam(value = "fromDate", required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-                @RequestParam(value = "toDate", required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
-                @RequestParam(value = "category", required = false) com.hostel.entity.Category category
-            ) {
-            User user = userRepository.findByUsername(authentication.getName())
+    @GetMapping("/search")
+    public ResponseEntity<List<ComplaintDTO>> searchComplaints(
+            Authentication authentication,
+            @RequestParam(value = "q", required = false) String query,
+            @RequestParam(value = "agent", required = false) String agent,
+            @RequestParam(value = "fromDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam(value = "toDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+            @RequestParam(value = "category", required = false) com.hostel.entity.Category category
+    ) {
+        User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-            String role = authentication.getAuthorities().stream()
+        String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .filter(auth -> auth.startsWith("ROLE_"))
                 .map(auth -> auth.substring(5))
                 .findFirst()
                 .orElse("CLIENT");
 
-            List<ComplaintDTO> result = complaintService.searchComplaints(query, agent, fromDate, toDate, category, user, role);
-            return ResponseEntity.ok(result);
-            }
+        List<ComplaintDTO> result = complaintService.searchComplaints(query, agent, fromDate, toDate, category, user, role);
+        return ResponseEntity.ok(result);
+    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ComplaintDTO> getComplaintById(@PathVariable Long id, Authentication authentication) {
+    @GetMapping("/{id:\\d+}")
+    public ResponseEntity<ComplaintDTO> getComplaintById(@PathVariable @NonNull Long id, Authentication authentication) {
         // Get logged-in user
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -105,10 +109,20 @@ public class ComplaintController {
         return ResponseEntity.ok(complaintService.getComplaintByIdWithAuth(id, user, role));
     }
 
-    @RequestMapping(value = "/{id}/status", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    @RequestMapping(value = "/{id:\\d+}/status", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<ComplaintDTO> updateStatus(
-            @PathVariable Long id,
+            @PathVariable @NonNull Long id,
             @RequestBody UpdateStatusRequest request) {
         return ResponseEntity.ok(complaintService.updateStatus(id, request.getStatus()));
+    }
+
+    @GetMapping(value = "/export-all", produces = "text/csv")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<StreamingResponseBody> exportComplaints() {
+        StreamingResponseBody stream = outputStream -> complaintService.streamComplaintsCsv(outputStream);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=complaints.csv")
+                .contentType(MediaType.parseMediaType("text/csv"))
+                .body(stream);
     }
 }
