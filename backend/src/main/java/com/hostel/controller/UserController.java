@@ -23,6 +23,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @GetMapping("/clients")
+    public ResponseEntity<List<UserDTO>> getClients() {
+        return ResponseEntity.ok(userService.getClients());
+    }
+
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody Map<String, String> request) {
         String name = request.get("name");

@@ -1,16 +1,16 @@
 .complaint-card {
-  background: white;
-  border-radius: 10px;
-  padding: 18px;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 45%, #eef2ff 100%);
+  border-radius: 14px;
+  padding: 18px 18px 16px;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  transition: box-shadow 0.2s, transform 0.1s;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
   border-left: 4px solid #2563eb;
 }
 
 .complaint-card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.2);
+  transform: translateY(-4px) scale(1.01);
 }
 
 .card-header {
@@ -22,12 +22,13 @@
 
 .card-id {
   font-weight: 700;
-  color: #2563eb;
+  color: #1d4ed8;
+  font-size: 0.9rem;
 }
 
 .card-category {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: #4b5563;
   margin-bottom: 8px;
   font-weight: 600;
   text-transform: uppercase;
@@ -45,7 +46,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .card-image-wrapper {

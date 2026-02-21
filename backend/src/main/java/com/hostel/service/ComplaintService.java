@@ -24,6 +24,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,6 +99,39 @@ public class ComplaintService {
 
     public List<ComplaintDTO> getAllComplaints() {
         return complaintRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ComplaintDTO> searchComplaints(String query, String agent, LocalDate fromDate,
+                                               LocalDate toDate, Category category, User currentUser, String role) {
+        // Start from allowed complaints based on role
+        List<Complaint> baseList;
+        if ("ADMIN".equals(role)) {
+            baseList = complaintRepository.findAll();
+        } else {
+            baseList = complaintRepository.findByRaisedBy(currentUser);
+        }
+
+        String q = query != null ? query.toLowerCase() : null;
+        String agentFilter = agent != null ? agent.toLowerCase() : null;
+        LocalDateTime from = fromDate != null ? fromDate.atStartOfDay() : null;
+        LocalDateTime to = toDate != null ? toDate.plusDays(1).atStartOfDay() : null; // exclusive upper bound
+
+        return baseList.stream()
+                .filter(c -> q == null ||
+                        (c.getDescription() != null && c.getDescription().toLowerCase().contains(q)))
+                .filter(c -> agentFilter == null ||
+                        (c.getAssignedTo() != null && c.getAssignedTo().toLowerCase().contains(agentFilter)))
+                .filter(c -> category == null || c.getCategory() == category)
+                .filter(c -> {
+                    if (from == null && to == null) return true;
+                    LocalDateTime created = c.getCreatedAt();
+                    if (created == null) return false;
+                    boolean afterFrom = from == null || !created.isBefore(from);
+                    boolean beforeTo = to == null || created.isBefore(to);
+                    return afterFrom && beforeTo;
+                })
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
