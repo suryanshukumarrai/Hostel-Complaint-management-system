@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -59,6 +62,31 @@ public class ComplaintController {
             return ResponseEntity.ok(complaintService.getComplaintsByUser(user));
         }
     }
+
+            @GetMapping("/search")
+            public ResponseEntity<List<ComplaintDTO>> searchComplaints(
+                Authentication authentication,
+                @RequestParam(value = "q", required = false) String query,
+                @RequestParam(value = "agent", required = false) String agent,
+                @RequestParam(value = "fromDate", required = false)
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+                @RequestParam(value = "toDate", required = false)
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+                @RequestParam(value = "category", required = false) com.hostel.entity.Category category
+            ) {
+            User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+            String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(auth -> auth.startsWith("ROLE_"))
+                .map(auth -> auth.substring(5))
+                .findFirst()
+                .orElse("CLIENT");
+
+            List<ComplaintDTO> result = complaintService.searchComplaints(query, agent, fromDate, toDate, category, user, role);
+            return ResponseEntity.ok(result);
+            }
 
     @GetMapping("/{id}")
     public ResponseEntity<ComplaintDTO> getComplaintById(@PathVariable Long id, Authentication authentication) {
