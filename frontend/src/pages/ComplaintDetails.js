@@ -36,6 +36,8 @@ function ComplaintDetails({ currentUser }) {
     try {
       const updated = await updateComplaintStatus(id, newStatus, currentUser);
       setComplaint(updated);
+      // Redirect to dashboard after successful update
+      navigate('/dashboard');
     } catch (err) {
       setError('Failed to update status: ' + (err.response?.data || err.message));
     } finally {

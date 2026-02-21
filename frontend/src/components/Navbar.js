@@ -19,6 +19,7 @@ function Navbar({ currentUser, onLogout }) {
         {currentUser ? (
           <>
             <Link to="/dashboard">Dashboard</Link>
+            <Link to="/statistics">Statistics</Link>
             <Link to="/complaint/new">New Complaint</Link>
             <span className="navbar-user">
               {currentUser.username} ({currentUser.role})
