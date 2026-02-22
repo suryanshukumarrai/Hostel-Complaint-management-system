@@ -38,7 +38,7 @@ function Login() {
     <div className="login-container">
       <div className="login-card">
         <h2>Login</h2>
-        <p className="subtitle">Hostel Complaint Management System</p>
+        <p className="subtitle">DormCare Elite Management System</p>
 
         {error && <div className="error-message">{error}</div>}
         

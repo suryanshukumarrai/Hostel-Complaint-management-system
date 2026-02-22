@@ -3,6 +3,7 @@
   border-radius: 10px;
   padding: 32px;
   max-width: 780px;
+  width: 100%;
   margin: 0 auto;
   box-shadow: 0 1px 8px rgba(0,0,0,0.08);
 }
@@ -27,7 +28,7 @@
 
 .detail-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 14px;
   margin-bottom: 24px;
 }
@@ -107,4 +108,39 @@
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .complaint-details {
+    padding: 20px;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-update {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status-update select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .complaint-details {
+    padding: 16px;
+  }
+
+  .complaint-details h2 {
+    font-size: 1.2rem;
+  }
+
+  .detail-image-thumb {
+    max-width: 150px;
+    max-height: 150px;
+  }
 }

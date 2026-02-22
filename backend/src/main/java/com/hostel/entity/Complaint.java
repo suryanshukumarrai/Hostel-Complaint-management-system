@@ -49,6 +49,13 @@ public class Complaint {
     
     @Column(name = "room_no")
     private String roomNo;
+
+    @Column(name = "building_code")
+    private String buildingCode;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "priority_level")
+    private PriorityLevel priorityLevel;
     
     @Column(name = "contact_no")
     private String contactNo;
@@ -58,6 +65,9 @@ public class Complaint {
     
     @Column(name = "time_slot")
     private String timeSlot;
+
+    @Column(name = "preferred_time_slot")
+    private String preferredTimeSlot;
     
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
@@ -68,6 +78,9 @@ public class Complaint {
     
     @Column(name = "assigned_to")
     private String assignedTo;
+
+    @Column(name = "assigned_team")
+    private String assignedTeam;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -75,10 +88,29 @@ public class Complaint {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "attachment_path")
+    private String attachmentPath;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "student_name")
+    private String studentName;
+
+    @Column(name = "complaint_date")
+    private LocalDate complaintDate;
+
+    @Column(name = "type")
+    private String type;
     
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @CreationTimestamp
+    @Column(name = "created_timestamp", updatable = false)
+    private LocalDateTime createdTimestamp;
 
     // Constructors
     public Complaint() {}
@@ -156,6 +188,22 @@ public class Complaint {
         this.roomNo = roomNo;
     }
 
+    public String getBuildingCode() {
+        return buildingCode;
+    }
+
+    public void setBuildingCode(String buildingCode) {
+        this.buildingCode = buildingCode;
+    }
+
+    public PriorityLevel getPriorityLevel() {
+        return priorityLevel;
+    }
+
+    public void setPriorityLevel(PriorityLevel priorityLevel) {
+        this.priorityLevel = priorityLevel;
+    }
+
     public String getContactNo() {
         return contactNo;
     }
@@ -178,6 +226,14 @@ public class Complaint {
 
     public void setTimeSlot(String timeSlot) {
         this.timeSlot = timeSlot;
+    }
+
+    public String getPreferredTimeSlot() {
+        return preferredTimeSlot;
+    }
+
+    public void setPreferredTimeSlot(String preferredTimeSlot) {
+        this.preferredTimeSlot = preferredTimeSlot;
     }
 
     public String getDescription() {
@@ -204,6 +260,14 @@ public class Complaint {
         this.assignedTo = assignedTo;
     }
 
+    public String getAssignedTeam() {
+        return assignedTeam;
+    }
+
+    public void setAssignedTeam(String assignedTeam) {
+        this.assignedTeam = assignedTeam;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -220,11 +284,59 @@ public class Complaint {
         this.imageUrl = imageUrl;
     }
 
+    public String getAttachmentPath() {
+        return attachmentPath;
+    }
+
+    public void setAttachmentPath(String attachmentPath) {
+        this.attachmentPath = attachmentPath;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public LocalDate getComplaintDate() {
+        return complaintDate;
+    }
+
+    public void setComplaintDate(LocalDate complaintDate) {
+        this.complaintDate = complaintDate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+
+    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
     }
 }

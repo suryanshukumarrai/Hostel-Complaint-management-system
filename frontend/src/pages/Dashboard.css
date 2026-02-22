@@ -1,7 +1,8 @@
 .dashboard {
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: 24px 24px 40px;
+  padding: 32px;
   background: radial-gradient(circle at top left, #f9fafb 0%, #eef2ff 40%, #e0f2fe 100%);
   border-radius: 18px;
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
@@ -13,28 +14,68 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
-  gap: 24px;
+  margin-bottom: 32px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dashboard-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: nowrap;
 }
 
 .dashboard-header h2 {
-  font-size: 1.6rem;
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
   color: #1e3a8a;
   flex-shrink: 0;
   font-weight: 800;
-  letter-spacing: 0.03em;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .dashboard-header .btn-primary {
-  flex: 1 1 auto;
-  justify-content: center;
-  padding: 14px 24px;
+  padding: 12px 22px;
   border-radius: 999px;
   background: linear-gradient(90deg, #4f46e5, #6366f1, #9333ea);
   border: none;
   box-shadow: 0 8px 18px rgba(79, 70, 229, 0.35);
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.dashboard-header .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.45);
+}
+
+.dashboard-header .btn-secondary {
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.dashboard-header .btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  background: #f9fafb;
 }
 
 .dashboard-toggles {
@@ -83,7 +124,7 @@
   gap: 12px;
   margin-bottom: 20px;
   background: #ffffff;
-  padding: 12px 16px;
+  padding: 16px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
   align-items: center;
@@ -91,13 +132,79 @@
 
 .search-filters input,
 .search-filters select {
-  flex: 1 1 160px;
-  min-width: 140px;
-  padding: 8px 10px;
+  flex: 1 1 150px;
+  min-width: 120px;
+  padding: 10px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
   font-size: 0.9rem;
   background: #f9fafb;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .dashboard-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .dashboard-header .btn-primary,
+  .dashboard-header .btn-secondary {
+    font-size: 0.8rem;
+    padding: 10px 14px;
+  }
+
+  .search-filters {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .search-filters input,
+  .search-filters select {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 16px;
+  }
+
+  .dashboard-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .dashboard-header .btn-primary,
+  .dashboard-header .btn-secondary {
+    font-size: 0.75rem;
+    padding: 9px 12px;
+  }
+
+  .dashboard-actions {
+    gap: 6px;
+  }
+
+  .complaint-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
 }
 
 .search-filters .btn-primary,
@@ -127,18 +234,19 @@
 
 .stats-cards {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .stats-cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .stats-cards {
     grid-template-columns: 1fr;
   }
@@ -506,8 +614,9 @@
 
 .complaint-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 8px;
 }
 
 .no-complaints {
