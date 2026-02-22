@@ -4,7 +4,7 @@ import { getComplaintById, updateComplaintStatus } from '../services/complaintSe
 import './ComplaintDetails.css';
 
 const STATUSES = ['OPEN', 'IN_PROGRESS', 'RESOLVED'];
-const IMAGE_BASE_URL = 'http://localhost:8080';
+const IMAGE_BASE_URL = process.env.REACT_APP_IMAGE_BASE_URL || 'http://localhost:8080';
 
 function ComplaintDetails({ currentUser }) {
   const { id } = useParams();

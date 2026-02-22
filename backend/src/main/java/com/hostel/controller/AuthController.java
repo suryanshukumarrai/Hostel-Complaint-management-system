@@ -4,6 +4,8 @@ import com.hostel.dto.AuthResponse;
 import com.hostel.dto.SignupRequest;
 import com.hostel.entity.User;
 import com.hostel.service.AuthService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,22 +14,22 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class AuthController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     private AuthService authService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
-        System.out.println("Signup request received: " + request.getUsername());
+        logger.info("Signup request received for username: {}", request.getUsername());
         try {
             User user = authService.signup(request);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new AuthResponse("User registered successfully", user.getId(), user.getUsername(), user.getRole()));
         } catch (Exception e) {
-            System.err.println("Signup error: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Signup failed for username: {}", request.getUsername(), e);
             throw e;
         }
     }
