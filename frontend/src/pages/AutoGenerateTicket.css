@@ -1,0 +1,80 @@
+.auto-generate {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.auto-generate-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.auto-generate-card h2 {
+  margin-bottom: 8px;
+  color: #1e3a8a;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+}
+
+.helper-text {
+  color: #475569;
+  margin-bottom: 18px;
+}
+
+.auto-generate textarea {
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5f5;
+  background: #f8fafc;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+.auto-generate .form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auto-generate {
+    padding: 16px;
+  }
+
+  .auto-generate-card {
+    padding: 20px;
+  }
+
+  .auto-generate .form-actions {
+    flex-direction: column;
+  }
+
+  .auto-generate .form-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .auto-generate {
+    padding: 12px;
+  }
+
+  .auto-generate-card {
+    padding: 16px;
+  }
+
+  .auto-generate-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .auto-generate textarea {
+    font-size: 0.9rem;
+    min-height: 120px;
+  }
+}

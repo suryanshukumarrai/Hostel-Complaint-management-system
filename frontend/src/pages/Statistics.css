@@ -1,5 +1,6 @@
 .statistics-container {
   max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem;
   animation: fadeIn 0.5s ease-in;
@@ -18,7 +19,7 @@
 }
 
 .statistics-title {
-  font-size: 2.5rem;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
   color: #2c3e50;
   margin-bottom: 2rem;
   text-align: center;
@@ -359,6 +360,20 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .statistics-container {
+    padding: 1.5rem;
+  }
+
+  .stats-overview {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .stat-icon {
+    font-size: 2.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .statistics-container {
     padding: 1rem;
@@ -378,5 +393,45 @@
 
   .block-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .chart-section {
+    padding: 1rem;
+  }
+
+  /* Make charts scrollable on mobile */
+  .chart-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 480px) {
+  .statistics-container {
+    padding: 0.75rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-content h3 {
+    font-size: 0.8rem;
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+  }
+
+  .progress-bar {
+    height: 24px;
+  }
+
+  .progress-label {
+    font-size: 0.85rem;
   }
 }

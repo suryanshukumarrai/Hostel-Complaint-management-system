@@ -37,6 +37,7 @@ public class ComplaintController {
     @Autowired
     private UserRepository userRepository;
 
+    @PreAuthorize("hasRole('CLIENT')")
     @PostMapping
     public ResponseEntity<ComplaintDTO> createComplaint(
             @ModelAttribute @NonNull CreateComplaintRequest request,
@@ -44,6 +45,7 @@ public class ComplaintController {
         ComplaintDTO complaint = complaintService.createComplaint(request, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(complaint);
     }
+
 
     @GetMapping
     public ResponseEntity<List<ComplaintDTO>> getAllComplaints(Authentication authentication) {

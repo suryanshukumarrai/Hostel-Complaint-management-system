@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Statistics from './pages/Statistics';
 import AiAssistant from './pages/AiAssistant';
+import AutoGenerateTicket from './pages/AutoGenerateTicket';
 import { authService } from './services/authService';
 
 function App() {
@@ -53,6 +54,9 @@ function App() {
           } />
           <Route path="/complaint/new" element={
             isAuthenticated ? <CreateComplaint currentUser={currentUser} /> : <Navigate to="/login" />
+          } />
+          <Route path="/complaint/auto-generate" element={
+            isAuthenticated ? <AutoGenerateTicket currentUser={currentUser} /> : <Navigate to="/login" />
           } />
           <Route path="/complaint/:id" element={
             isAuthenticated ? <ComplaintDetails currentUser={currentUser} /> : <Navigate to="/login" />

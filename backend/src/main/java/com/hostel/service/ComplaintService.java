@@ -42,6 +42,9 @@ public class ComplaintService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ChromaClient chromaClient;
+
     public ComplaintDTO createComplaint(@NonNull CreateComplaintRequest request, MultipartFile image) {
         Long userId = request.getUserId();
         User user = userRepository.findById(java.util.Objects.requireNonNull(userId, "userId must not be null"))
@@ -74,6 +77,13 @@ public class ComplaintService {
         }
 
         Complaint saved = complaintRepository.save(complaint);
+
+        try {
+            chromaClient.upsertComplaint(saved);
+        } catch (Exception ex) {
+            // Do not block complaint creation if embedding sync fails
+        }
+
         return convertToDTO(saved);
     }
 
@@ -194,14 +204,24 @@ public class ComplaintService {
         dto.setSubBlock(c.getSubBlock());
         dto.setRoomType(c.getRoomType());
         dto.setRoomNo(c.getRoomNo());
+        dto.setBuildingCode(c.getBuildingCode());
+        dto.setPriorityLevel(c.getPriorityLevel());
         dto.setContactNo(c.getContactNo());
         dto.setAvailabilityDate(c.getAvailabilityDate());
         dto.setTimeSlot(c.getTimeSlot());
+        dto.setPreferredTimeSlot(c.getPreferredTimeSlot());
         dto.setDescription(c.getDescription());
         dto.setAssignedTo(c.getAssignedTo());
+        dto.setAssignedTeam(c.getAssignedTeam());
         dto.setStatus(c.getStatus());
         dto.setCreatedAt(c.getCreatedAt());
+        dto.setCreatedTimestamp(c.getCreatedTimestamp());
         dto.setImageUrl(c.getImageUrl());
+        dto.setAttachmentPath(c.getAttachmentPath());
+        dto.setPhoneNumber(c.getPhoneNumber());
+        dto.setStudentName(c.getStudentName());
+        dto.setComplaintDate(c.getComplaintDate());
+        dto.setType(c.getType());
 
         User u = c.getRaisedBy();
         UserDTO userDTO = new UserDTO();

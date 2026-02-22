@@ -44,6 +44,15 @@ export const createComplaint = async (payload, currentUser, imageFile) => {
   return response.data;
 };
 
+export const generateAiComplaint = async (description, currentUser) => {
+  const response = await axios.post(`${BASE_URL}/ai/generate-complaint`, {
+    description,
+  }, {
+    headers: getAuthHeader(currentUser),
+  });
+  return response.data;
+};
+
 export const updateComplaintStatus = async (id, status, currentUser) => {
   const response = await axios.put(`${BASE_URL}/complaints/${id}/status`, { status }, {
     headers: getAuthHeader(currentUser),

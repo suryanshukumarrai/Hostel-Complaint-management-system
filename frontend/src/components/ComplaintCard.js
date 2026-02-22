@@ -15,21 +15,24 @@ function ComplaintCard({ complaint, onClick }) {
           />
         </div>
       )}
-      <div className="card-header">
-        <span className="card-id">#{complaint.id}</span>
-        <span className={`status-badge status-${complaint.status?.toLowerCase()}`}>
-          {complaint.status}
-        </span>
-      </div>
-      <div className="card-category">{complaint.category} — {complaint.messageType}</div>
-      <div className="card-description">
-        {complaint.description?.length > 100
-          ? complaint.description.substring(0, 100) + '...'
-          : complaint.description}
+      <div className="card-content">
+        <div className="card-header">
+          <span className="card-id">#{complaint.id}</span>
+          <span className={`status-badge status-${complaint.status?.toLowerCase()}`}>
+            {complaint.status}
+          </span>
+        </div>
+        <div className="card-category">{complaint.category}</div>
+        {complaint.messageType && (
+          <div className="card-message-type">{complaint.messageType}</div>
+        )}
+        <div className="card-description">
+          {complaint.description || 'No description provided'}
+        </div>
       </div>
       <div className="card-footer">
-        <span>{complaint.raisedBy?.name || 'Unknown'}</span>
-        <span>{complaint.createdAt ? new Date(complaint.createdAt).toLocaleDateString() : ''}</span>
+        <span className="footer-user">{complaint.raisedBy?.name || 'Unknown'}</span>
+        <span className="footer-date">{complaint.createdAt ? new Date(complaint.createdAt).toLocaleDateString() : ''}</span>
       </div>
     </div>
   );

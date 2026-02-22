@@ -1,26 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 function Navbar({ currentUser, onLogout }) {
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     onLogout();
     navigate('/login');
+    setMobileMenuOpen(false);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/dashboard">🏢 Hostel Complaint Management</Link>
+        <Link to="/dashboard">DormCare Elite</Link>
       </div>
-      <div className="navbar-links">
+      
+      <button 
+        className="navbar-toggle" 
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div className={`navbar-links ${mobileMenuOpen ? 'active' : ''}`}>
         {currentUser ? (
           <>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/statistics">Statistics</Link>
-            <Link to="/complaint/new">New Complaint</Link>
+            <Link to="/dashboard" onClick={closeMobileMenu}>Dashboard</Link>
+            <Link to="/statistics" onClick={closeMobileMenu}>Statistics</Link>
             <span className="navbar-user">
               {currentUser.username} ({currentUser.role})
             </span>
@@ -28,8 +44,8 @@ function Navbar({ currentUser, onLogout }) {
           </>
         ) : (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/signup">Signup</Link>
+            <Link to="/login" onClick={closeMobileMenu}>Login</Link>
+            <Link to="/signup" onClick={closeMobileMenu}>Signup</Link>
           </>
         )}
       </div>
