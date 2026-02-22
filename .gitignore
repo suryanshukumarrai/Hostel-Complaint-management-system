@@ -29,3 +29,8 @@ yarn-error.log*
 .env
 .env.local
 .env.production
+
+# Sensitive files
+replace.txt
+backend/uploads/**
+!backend/uploads/.gitkeep
