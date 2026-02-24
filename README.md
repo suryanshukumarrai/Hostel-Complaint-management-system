@@ -1,4 +1,5 @@
-# Hostel Complaint Management System
+# DormCare Elite
+Hostel Complaint Management System
 
 A full-stack web application for managing hostel complaints with role-based access control, built with Spring Boot and React.
 
